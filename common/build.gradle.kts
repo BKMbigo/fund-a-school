@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.composeMultiplatform)
+    alias(libs.plugins.googleServices)
 }
 
 kotlin {
@@ -20,6 +21,7 @@ kotlin {
                 api(libs.kotlinx.serialization.json)
 
                 implementation(libs.firebase.firestore)
+                implementation(libs.firebase.auth)
 
                 implementation(compose.runtime)
                 implementation(compose.foundation)
@@ -29,8 +31,9 @@ kotlin {
                 implementation(compose.materialIconsExtended)
 
                 implementation(libs.image.loader)
-                implementation(libs.voyager.navigator)
-                implementation(libs.voyager.transitions)
+
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
             }
         }
         val commonTest by getting {}
@@ -54,11 +57,18 @@ kotlin {
                 implementation(libs.compose.ui.tooling.preview)
                 implementation(libs.compose.ui.graphics)
                 implementation(libs.compose.animation)
+
+
+                implementation(libs.voyager.navigator)
+                implementation(libs.voyager.transitions)
             }
         }
         val jsMain by getting {
             dependencies {
                 implementation(compose.html.core)
+
+                implementation(libs.routing.compose)
+
                 implementation(npm("argon2-browser", "^1.0.0"))
             }
         }

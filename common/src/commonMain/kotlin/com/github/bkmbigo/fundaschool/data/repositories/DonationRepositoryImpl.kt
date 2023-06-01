@@ -21,7 +21,7 @@ class DonationRepositoryImpl(
 
     override suspend fun updateDonation(donation: Donation) {
         collectionReference.document(donation.id).update(
-            "customerId" to donation.customerId,
+            "userId" to donation.userId,
             "projectId" to donation.projectId,
             "amount" to donation.amount
         )

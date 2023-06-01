@@ -9,16 +9,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.domain.models.News
+import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
+import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
 
 @Composable
 fun NewsInformationCard(
     news: News,
+    size: DpSize,
     modifier: Modifier = Modifier
 ) {
+    val layoutProperties = LocalLayoutProperty.current
+
     OutlinedCard(
-        modifier = modifier,
+        modifier = modifier.applyCustomSize(size),
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 8.dp)
@@ -28,7 +34,8 @@ fun NewsInformationCard(
             Text(
                 text = news.caption,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                style = layoutProperties.TextStyle.informationText
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -39,12 +46,13 @@ fun NewsInformationCard(
             ) {
                 Text(
                     text = "Category:",
-                    fontWeight = FontWeight.SemiBold
+                    style = layoutProperties.TextStyle.informationEmphasis
                 )
 
                 Text(
                     text = news.category.text,
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
+                    style = layoutProperties.TextStyle.informationText
                 )
             }
 
@@ -56,12 +64,13 @@ fun NewsInformationCard(
             ) {
                 Text(
                     text = "Author:",
-                    fontWeight = FontWeight.SemiBold
+                    style = layoutProperties.TextStyle.informationEmphasis
                 )
 
                 Text(
                     text = news.author,
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
+                    style = layoutProperties.TextStyle.informationText
                 )
             }
 
@@ -73,12 +82,13 @@ fun NewsInformationCard(
             ) {
                 Text(
                     text = "Posted on:",
-                    fontWeight = FontWeight.SemiBold
+                    style = layoutProperties.TextStyle.informationEmphasis
                 )
 
                 Text(
                     text = news.uploadDate.toString(),
-                    textAlign = TextAlign.End
+                    textAlign = TextAlign.End,
+                    style = layoutProperties.TextStyle.informationText
                 )
             }
 

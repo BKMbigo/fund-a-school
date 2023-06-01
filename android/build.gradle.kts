@@ -1,6 +1,9 @@
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.googleServices)
+    alias(libs.plugins.firebaseCrashlytics)
 }
 
 group = "com.github.bkmbigo.fundaschool"
@@ -31,12 +34,17 @@ dependencies {
     implementation(libs.compose.animation)
 
     implementation(libs.voyager.navigator)
+
+    implementation(libs.koin.core)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics.ktx)
 }
 
 android {
     compileSdkVersion(33)
     defaultConfig {
-        applicationId = "com.github.bkmbigo.fundasmart.android"
+        applicationId = "com.github.bkmbigo.fundaschool"
         minSdkVersion(24)
         targetSdkVersion(33)
         versionCode = 1
@@ -55,6 +63,6 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.toString()
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
 }

@@ -7,7 +7,7 @@ interface ProjectRepository {
     suspend fun insertProject(project: Project)
     suspend fun updateProject(project: Project)
     suspend fun deleteProject(project: Project)
-    suspend fun getProject(projectId: String): Project
+    suspend fun getProject(projectId: String): Project?
     suspend fun getAllProjects(projectId: String): List<Project>
 
     fun observeProjects(): Flow<List<Project>>

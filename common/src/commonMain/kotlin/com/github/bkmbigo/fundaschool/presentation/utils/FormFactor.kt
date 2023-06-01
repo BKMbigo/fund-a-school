@@ -1,7 +1,8 @@
 package com.github.bkmbigo.fundaschool.presentation.utils
 
-enum class FormFactor {
-    MOBILE,
-    SMALL,
-    LARGE
+expect enum class FormFactor {
+    ;
+    companion object {
+        val Default: FormFactor
+    }
 }

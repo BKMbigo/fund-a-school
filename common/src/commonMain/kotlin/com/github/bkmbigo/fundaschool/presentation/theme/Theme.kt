@@ -4,24 +4,41 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
+import androidx.compose.ui.text.font.FontFamily
+import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.DefaultLocalProperties
+import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
+import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.generateDefaultLayoutProperties
 import com.github.bkmbigo.fundaschool.presentation.theme.typography.TypographyItem
 import com.github.bkmbigo.fundaschool.presentation.theme.typography.generateDefaultTypography
-import kotlinx.coroutines.async
+import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun FundASchoolTheme(
+    formFactorState: StateFlow<FormFactor> = MutableStateFlow(FormFactor.Default),
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val materialDefaults = TypographyItem.getMaterialDefaults()
 
+    var exoFamily = remember<FontFamily?> { null }
+    var robotoSans = remember<FontFamily?> { null }
+
+    val formFactor by formFactorState.collectAsState()
+
     var typographyItem by remember { mutableStateOf(materialDefaults) }
+    var layoutProperties by remember { mutableStateOf(DefaultLocalProperties) }
 
     LaunchedEffect(Unit) {
-        val exoFamily = async { generateExoFontFamily() }
-        val robotoSans = async { generateRobotoSansFontFamily() }
+        // Make calls asynchronously
+        exoFamily = generateExoFontFamily()
+        robotoSans = generateRobotoSansFontFamily()
+    }
 
-        val newTypographyItem = generateDefaultTypography(exoFamily.await(), robotoSans.await())
+    LaunchedEffect(exoFamily, robotoSans, formFactor) {
+        val newTypographyItem = generateDefaultTypography(exoFamily ?: FontFamily.Serif, robotoSans ?: FontFamily.SansSerif)
+        layoutProperties = generateDefaultLayoutProperties(formFactor, exoFamily ?: FontFamily.Serif, robotoSans ?: FontFamily.SansSerif)
         typographyItem = newTypographyItem
     }
 
@@ -29,9 +46,13 @@ fun FundASchoolTheme(
 
     MaterialTheme(
         colorScheme = getDefaultColorScheme(isDarkTheme),
-        typography = typographyItem.toMaterialTypography(),
-        content = content
-    )
+        typography = typographyItem.toMaterialTypography()
+    ) {
+        CompositionLocalProvider(
+            LocalLayoutProperty provides layoutProperties,
+            content = content
+        )
+    }
 }
 
 

@@ -8,16 +8,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
+import com.github.bkmbigo.fundaschool.di.commonModule
 import com.github.bkmbigo.fundaschool.presentation.screens.home.HomeScreen
 import com.github.bkmbigo.fundaschool.presentation.theme.FundASchoolTheme
 import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
+import org.koin.core.context.startKoin
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        startKoin {
+            modules(commonModule)
+        }
+
         setContent {
             FundASchoolTheme {
-                Navigator(HomeScreen(FormFactor.MOBILE))
+                Navigator(HomeScreen())
             }
         }
     }

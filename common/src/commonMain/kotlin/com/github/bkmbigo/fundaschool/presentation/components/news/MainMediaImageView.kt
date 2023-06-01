@@ -24,6 +24,7 @@ fun MediaImageView(
         MediaType.IMAGE -> {
             Image(
                 painter = rememberAsyncImagePainter(media.url),
+                modifier = modifier,
                 contentDescription = null,
                 contentScale = options.contentScale,
             )

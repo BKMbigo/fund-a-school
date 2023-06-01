@@ -20,16 +20,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.bkmbigo.fundaschool.domain.models.News
 import com.github.bkmbigo.fundaschool.domain.models.Project
+import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
+import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
 import com.seiko.imageloader.rememberAsyncImagePainter
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -38,10 +42,13 @@ import kotlin.math.roundToInt
 @Composable
 fun HomeNewsItem(
     news: News,
+    size: DpSize,
     modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Crop,
     onOpenProject: (Project) -> Unit,
     onOpenNews: (News) -> Unit
 ) {
+    val layoutProperties = LocalLayoutProperty.current
     val coroutineScope = rememberCoroutineScope()
     val cardInteractionSource = remember { MutableInteractionSource() }
 
@@ -65,12 +72,13 @@ fun HomeNewsItem(
 
     Column(
         modifier = modifier
-            .shadow(4.dp, shape = RoundedCornerShape(8.dp))
+            .applyCustomSize(size)
+            .shadow(4.dp, shape = RoundedCornerShape(20.dp))
             .background(
                 MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(20.dp)
             )
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(20.dp))
             .hoverable(
                 interactionSource = cardInteractionSource,
                 enabled = true
@@ -80,35 +88,45 @@ fun HomeNewsItem(
                 LocalIndication.current,
                 true
             ) {
-              onOpenNews(news)
+                onOpenNews(news)
             },
     ) {
-        Image(
-            rememberAsyncImagePainter("https://corsproxy.io/?https://images.unsplash.com/photo-1473649085228-583485e6e4d7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1032&q=80"),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth().weight(1f, true),
-            contentScale = ContentScale.FillWidth
-        )
+        if (news.media.isNotEmpty()) {
+            MediaImageView(
+                media = news.media.first(),
+                modifier = Modifier.weight(1f, true),
+                options = MainMediaImageViewOptions(
+                    contentScale = contentScale
+                )
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f, true)
+                    .background(MaterialTheme.colorScheme.tertiaryContainer),
+            )
+        }
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surface),
+                .height(IntrinsicSize.Max)
+                .background(MaterialTheme.colorScheme.primaryContainer),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ProvideTextStyle(MaterialTheme.typography.titleMedium) {
-                Text(
-                    text = news.title,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(
-                            horizontal = 12.dp,
-                            vertical = 12.dp
-                        ),
-                    textAlign = TextAlign.Center,
-                )
-            }
+            Text(
+                text = news.title,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(
+                        horizontal = 12.dp,
+                        vertical = 12.dp
+                    ),
+                textAlign = TextAlign.Center,
+                style = layoutProperties.TextStyle.informationTitle
+            )
 
             AnimatedVisibility(
                 visible = isExpanded,
@@ -130,13 +148,11 @@ fun HomeNewsItem(
                 ) {
                     Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp))
 
-                    ProvideTextStyle(MaterialTheme.typography.bodyMedium) {
-                        Text(
-                            text = news.caption,
-                            modifier = Modifier.padding(top = 4.dp, bottom = 8.dp),
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
+                    Text(
+                        text = news.caption,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 8.dp),
+                        overflow = TextOverflow.Ellipsis,
+                    )
 
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
@@ -157,7 +173,11 @@ fun HomeNewsItem(
                                 Text(
                                     text = "Open Project"
                                 )
-                            }
+                            },
+                            colors = SuggestionChipDefaults.elevatedSuggestionChipColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                labelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
                         )
                     }
                 }

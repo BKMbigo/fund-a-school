@@ -7,7 +7,7 @@ interface SchoolRepository {
     suspend fun insertSchool(school: School)
     suspend fun updateSchool(school: School)
     suspend fun deleteSchool(school: School)
-    suspend fun getSchool(schoolId: String): School
+    suspend fun getSchool(schoolId: String): School?
     suspend fun getAllSchools(): List<School>
 
     fun observeSchools(): Flow<List<School>>

@@ -5,11 +5,15 @@
 )
 
 import androidx.compose.runtime.*
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.window.ComposeWindow
 import com.github.bkmbigo.fundaschool.presentation.theme.FundASchoolTheme
 import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLStyleElement
 import org.w3c.dom.HTMLTitleElement
@@ -22,7 +26,7 @@ private const val CANVAS_ELEMENT_ID = "ComposeTarget" // Hardwired into ComposeW
 @Suppress("FunctionName")
 fun BrowserViewportWindow(
     title: String = "Untitled",
-    content: @Composable ComposeWindow.(FormFactor) -> Unit
+    content: @Composable ComposeWindow.(StateFlow<FormFactor>) -> Unit
 ) {
     val htmlHeadElement = document.head!!
     htmlHeadElement.appendChild(
@@ -55,7 +59,7 @@ fun BrowserViewportWindow(
     }
 
     ComposeWindow().apply {
-//        var formFactor by remember { mutableStateOf(FormFactor.SMALL) }
+        val _formFactorState = MutableStateFlow(FormFactor.SMALL)
 
         fun ComposeWindow.setNewCanvasSize() {
             val scale = layer.layer.contentScale
@@ -67,13 +71,9 @@ fun BrowserViewportWindow(
             val height = (canvas.height / scale * density).toInt()
             layer.setSize(width, height)
 
-            val formFactor = if(width < 1024) FormFactor.SMALL else FormFactor.LARGE
+            _formFactorState.value = if(width < 1024) FormFactor.SMALL else FormFactor.LARGE
 
-            setContent {
-                FundASchoolTheme {
-                    content(formFactor)
-                }
-            }
+
         }
         window.addEventListener("resize", {
             setNewCanvasSize()
@@ -85,6 +85,14 @@ fun BrowserViewportWindow(
                     ?: document.createElement("title").also { htmlHeadElement.appendChild(it) }
                 ) as HTMLTitleElement
         htmlTitleElement.textContent = title
+
+        setContent {
+            FundASchoolTheme(
+                formFactorState = _formFactorState
+            ) {
+                content(_formFactorState.asStateFlow())
+            }
+        }
 
         setNewCanvasSize()
     }
