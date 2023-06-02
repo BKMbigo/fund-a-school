@@ -15,13 +15,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.di.WithKoin
 import com.github.bkmbigo.fundaschool.di.withKoin
 import com.github.bkmbigo.fundaschool.domain.repositories.AuthRepository
 import com.github.bkmbigo.fundaschool.domain.repositories.UserRepository
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.DialogLayout
-import com.github.bkmbigo.fundaschool.presentation.components.dialog.login.LoginDialog
-import com.github.bkmbigo.fundaschool.presentation.components.dialog.login.LogoutDialog
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import com.seiko.imageloader.rememberAsyncImagePainter
 import dev.gitlive.firebase.auth.FirebaseUser
@@ -85,7 +82,7 @@ fun HomeActionDialog(
                 onAction = { onAction(HomeActionDialogAction.NavigateToAdmin) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp, vertical = 4.dp)
+                    .padding(horizontal = 12.dp)
             )
         }
 
@@ -95,7 +92,7 @@ fun HomeActionDialog(
             onAction = { onAction(HomeActionDialogAction.NavigateToDonation) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 4.dp)
+                .padding(horizontal = 12.dp)
         )
 
         ContainerAction(
@@ -104,7 +101,7 @@ fun HomeActionDialog(
             onAction = { onAction(HomeActionDialogAction.NavigateToProjects) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 4.dp)
+                .padding(horizontal = 12.dp)
         )
 
         ContainerAction(
@@ -113,7 +110,7 @@ fun HomeActionDialog(
             onAction = { onAction(HomeActionDialogAction.NavigateToAboutUs) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 4.dp)
+                .padding(horizontal = 12.dp)
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -216,7 +213,7 @@ private fun ContainerAction(
             imageVector = icon,
             contentDescription = null,
             modifier = Modifier
-                .size(16.dp)
+                .size(36.dp)
                 .padding(horizontal = 10.dp)
         )
 
@@ -225,7 +222,9 @@ private fun ContainerAction(
         Text(
             text = title,
             style = layoutProperties.TextStyle.dialogAction,
-            modifier = Modifier.weight(1f, true)
+            modifier = Modifier
+                .weight(1f, true)
+                .padding(vertical = 4.dp)
         )
 
     }

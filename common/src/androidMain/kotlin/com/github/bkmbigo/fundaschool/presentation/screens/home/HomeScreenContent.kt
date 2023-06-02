@@ -28,14 +28,18 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.github.bkmbigo.fundaschool.domain.models.Media
 import com.github.bkmbigo.fundaschool.domain.models.News
+import com.github.bkmbigo.fundaschool.domain.models.Project
 import com.github.bkmbigo.fundaschool.domain.utils.MediaType
 import com.github.bkmbigo.fundaschool.domain.utils.NewsCategory
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.homeaction.HomeActionDialog
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.homeaction.HomeActionDialogAction
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.login.LoginDialog
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.login.LogoutDialog
+import com.github.bkmbigo.fundaschool.presentation.components.list.HorizontalScrollableList
 import com.github.bkmbigo.fundaschool.presentation.components.topbar.SmallTopBar
 import com.github.bkmbigo.fundaschool.presentation.components.news.HomeNewsItem
+import com.github.bkmbigo.fundaschool.presentation.components.project.ProjectItem
+import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenAction
 import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenState
 import com.github.bkmbigo.fundaschool.presentation.theme.FundASchoolTheme
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
@@ -49,7 +53,7 @@ import kotlinx.datetime.toLocalDateTime
 @Composable
 internal fun HomeScreenContent(
     state: HomeScreenState,
-    onSearch: (String) -> Unit
+    onAction: (HomeScreenAction) -> Unit,
 ) {
     val layoutProperties = LocalLayoutProperty.current
 
@@ -66,147 +70,188 @@ internal fun HomeScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 4.dp)
-            .verticalScroll(rememberScrollState())
     ) {
         SmallTopBar(
             modifier = Modifier.fillMaxWidth(),
-            onSearch = onSearch,
+            onSearch = { onAction(HomeScreenAction.Search(it)) },
             onOpenDialog = { isOptionsDialogOpen = true }
         )
 
-        Spacer(modifier = Modifier.height(4.dp))
-
-        AnimatedVisibility(
-            visible = state.bookmarks.isNotEmpty(),
+        Column(
+            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())
         ) {
-            Column {
-                Text(
-                    text = "Bookmarks",
-                    style = layoutProperties.TextStyle.sectionTitle,
-                    modifier = Modifier.padding(sectionTitlePadding)
-                )
 
+            Spacer(modifier = Modifier.height(4.dp))
+
+            AnimatedVisibility(
+                visible = state.bookmarks.isNotEmpty(),
+            ) {
+                Column {
+                    Text(
+                        text = "Bookmarks",
+                        style = layoutProperties.TextStyle.sectionTitle,
+                        modifier = Modifier.padding(sectionTitlePadding)
+                    )
+
+
+                }
+            }
+
+            AnimatedVisibility(
+                visible = state.news.isNotEmpty()
+            ) {
+                Column {
+                    Text(
+                        text = "News",
+                        style = layoutProperties.TextStyle.sectionTitle,
+                        modifier = Modifier.padding(sectionTitlePadding)
+                    )
+
+                    if (layoutProperties.formFactor == FormFactor.PORTRAIT) {
+                        val pagerState = rememberPagerState()
+
+                        HorizontalPager(
+                            pageCount = state.news.size,
+                            state = pagerState,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth().padding(sectionListPadding)
+                        ) { index ->
+                            HomeNewsItem(
+                                news = state.news[index],
+                                size = DpSize(Dp.Infinity, 200.dp),
+                                modifier = Modifier.fillMaxWidth().padding(sectionListPadding),
+                                contentScale = ContentScale.Crop,
+                                onOpenProject = { onAction(HomeScreenAction.NavigateToProject(it)) },
+                                onOpenNews = { onAction(HomeScreenAction.NavigateToNews(it)) }
+                            )
+                        }
+                    } else {
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 4.dp, vertical = 4.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp)
+                        ) {
+                            items(state.news) { newsItem ->
+                                HomeNewsItem(
+                                    news = newsItem,
+                                    size = DpSize(Dp.Infinity, 200.dp),
+                                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp, horizontal = 4.dp),
+                                    contentScale = ContentScale.Crop,
+                                    onOpenProject = { onAction(HomeScreenAction.NavigateToProject(it)) },
+                                    onOpenNews = { onAction(HomeScreenAction.NavigateToNews(it)) }
+                                )
+                            }
+                        }
+                    }
+                }
 
             }
-        }
 
-        AnimatedVisibility(
-            visible = state.news.isNotEmpty()
-        ) {
-            Column {
-                Text(
-                    text = "News",
-                    style = layoutProperties.TextStyle.sectionTitle,
-                    modifier = Modifier.padding(sectionTitlePadding)
-                )
+            AnimatedVisibility(
+                visible = state.featuredProjects.isNotEmpty()
+            ) {
+                Column {
+                    Text(
+                        text = "Featured Projects",
+                        style = layoutProperties.TextStyle.sectionTitle,
+                        modifier = Modifier.padding(sectionTitlePadding)
+                    )
 
-                if (layoutProperties.formFactor == FormFactor.PORTRAIT) {
-                    val pagerState = rememberPagerState()
-
-                    HorizontalPager(
-                        pageCount = state.news.size,
-                        state = pagerState,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth().padding(sectionListPadding)
-                    ) { index ->
-                        HomeNewsItem(
-                            news = state.news[index],
-                            size = DpSize(Dp.Infinity, 200.dp),
-                            modifier = Modifier.fillMaxWidth().padding(sectionListPadding),
-                            contentScale = ContentScale.Crop,
-                            onOpenProject = { /*TODO*/ },
-                            onOpenNews = { /*TODO*/ }
-                        )
-                    }
-                } else {
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 4.dp, vertical = 4.dp),
-                        contentPadding = PaddingValues(horizontal = 8.dp)
+                    HorizontalScrollableList(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        contentPadding = PaddingValues(horizontal = 4.dp)
                     ) {
-                        items(state.news) { newsItem ->
-                            HomeNewsItem(
-                                news = newsItem,
-                                size = DpSize(Dp.Infinity, 200.dp),
-                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp, horizontal = 4.dp),
-                                contentScale = ContentScale.Crop,
-                                onOpenProject = { /*TODO*/ },
-                                onOpenNews = { /*TODO*/ }
+                        items(state.featuredProjects) { projectItem ->
+                            ProjectItem.FeaturedProject(
+                                project = projectItem,
+                                size = DpSize(250.dp, 350.dp),
+                                modifier = Modifier,
+                                isProjectBookmarked = false,
+                                onProjectBookmarked = {},
+                                onProjectOpened = {
+                                    onAction(HomeScreenAction.NavigateToProject(projectItem))
+                                }
                             )
                         }
                     }
                 }
             }
-
         }
 
         AnimatedVisibility(
-            visible = state.featuredProjects.isNotEmpty()
+            visible = isOptionsDialogOpen || showLoginDialog || showLogoutDialog,
+            enter = expandHorizontally(
+                spring(stiffness = Spring.StiffnessMediumLow),
+                expandFrom = Alignment.CenterHorizontally
+            ) + expandVertically(
+                spring(stiffness = Spring.StiffnessVeryLow),
+                expandFrom = Alignment.CenterVertically,
+                initialHeight = { it / 8 }
+            )
         ) {
-            Column {
-                Text(
-                    text = "Featured Project",
-                    style = layoutProperties.TextStyle.sectionTitle,
-                    modifier = Modifier.padding(sectionTitlePadding)
-                )
-            }
-        }
-    }
+            if (isOptionsDialogOpen) {
+                Dialog(
+                    onDismissRequest = {
+                        isOptionsDialogOpen = false
+                    }
+                ) {
+                    HomeActionDialog(
+                        onAction = { action ->
+                            when (action) {
+                                HomeActionDialogAction.NavigateToAboutUs -> {
+                                    onAction(HomeScreenAction.NavigateToAboutUs)
+                                }
 
-    AnimatedVisibility(
-        visible = isOptionsDialogOpen || showLoginDialog || showLogoutDialog,
-        enter = expandHorizontally(
-            spring(stiffness = Spring.StiffnessMediumLow),
-            expandFrom = Alignment.CenterHorizontally
-        ) + expandVertically(
-            spring(stiffness = Spring.StiffnessVeryLow),
-            expandFrom = Alignment.CenterVertically,
-            initialHeight = { it / 8 }
-        )
-    ) {
-        if(isOptionsDialogOpen) {
-            Dialog(
-                onDismissRequest = {
-                    isOptionsDialogOpen = false
+                                HomeActionDialogAction.NavigateToAdmin -> {
+                                    onAction(HomeScreenAction.NavigateToAdmin)
+                                }
+
+                                HomeActionDialogAction.NavigateToDonation -> {
+                                    onAction(HomeScreenAction.NavigateToDonations)
+                                }
+
+                                HomeActionDialogAction.NavigateToHome -> { /*TODO*/
+                                }
+
+                                HomeActionDialogAction.NavigateToProjects -> {
+                                    onAction(HomeScreenAction.NavigateToProjects)
+                                }
+
+                                HomeActionDialogAction.EditProfile -> {}
+                                HomeActionDialogAction.Login -> {
+                                    showLoginDialog = true
+                                }
+
+                                HomeActionDialogAction.Logout -> {
+                                    showLogoutDialog = true
+                                }
+                            }
+                        },
+                        onDismissRequest = { isOptionsDialogOpen = false }
+                    )
                 }
-            ) {
-                HomeActionDialog(
-                    onAction = { action ->
-                        when (action) {
-                            HomeActionDialogAction.NavigateToAboutUs -> {}
-                            HomeActionDialogAction.NavigateToAdmin -> {}
-                            HomeActionDialogAction.NavigateToDonation -> {}
-                            HomeActionDialogAction.NavigateToHome -> {}
-                            HomeActionDialogAction.NavigateToProjects -> {}
-                            HomeActionDialogAction.EditProfile -> {}
-                            HomeActionDialogAction.Login -> { showLoginDialog = true }
-                            HomeActionDialogAction.Logout -> { showLogoutDialog = true }
-                        }
-                    },
-                    onDismissRequest = { isOptionsDialogOpen = false }
-                )
             }
-        }
 
-        if(showLoginDialog) {
-            Dialog(
-                onDismissRequest = { showLoginDialog = false },
-                properties = DialogProperties(usePlatformDefaultWidth = false)
-            ) {
-                LoginDialog(
+            if (showLoginDialog) {
+                Dialog(
+                    onDismissRequest = { showLoginDialog = false },
+                    properties = DialogProperties(usePlatformDefaultWidth = false)
+                ) {
+                    LoginDialog(
+                        onDismissRequest = { showLoginDialog = false }
+                    )
+                }
+            }
+
+            if (showLogoutDialog) {
+                Dialog(
                     onDismissRequest = { showLoginDialog = false }
-                )
-            }
-        }
-
-        if(showLogoutDialog) {
-            Dialog(
-                onDismissRequest = { showLoginDialog = false }
-            ) {
-                LogoutDialog(
-                    onDismissRequest = { showLogoutDialog = false }
-                )
+                ) {
+                    LogoutDialog(
+                        onDismissRequest = { showLogoutDialog = false }
+                    )
+                }
             }
         }
     }

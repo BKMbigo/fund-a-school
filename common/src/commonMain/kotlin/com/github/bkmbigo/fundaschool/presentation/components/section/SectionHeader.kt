@@ -6,6 +6,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -130,6 +131,7 @@ fun SectionHeader(
                             text = "Search..."
                         )
                     },
+                    shape = RoundedCornerShape(16.dp),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions {
                         onSearch(searchText.text)
@@ -138,7 +140,7 @@ fun SectionHeader(
 
                 Spacer(modifier = Modifier.width(4.dp))
 
-                Button(
+                TextButton(
                     onClick = {
                         onSearch(searchText.text)
                     },

@@ -3,7 +3,6 @@ package com.github.bkmbigo.fundaschool.presentation.components.dialog.login
 import com.github.bkmbigo.fundaschool.domain.repositories.AuthRepository
 import com.github.bkmbigo.fundaschool.domain.utils.AuthError
 import com.github.bkmbigo.fundaschool.domain.utils.AuthResponse
-import dev.gitlive.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

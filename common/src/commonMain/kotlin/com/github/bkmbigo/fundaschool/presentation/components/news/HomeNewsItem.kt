@@ -158,11 +158,15 @@ fun HomeNewsItem(
                         modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        SuggestionChip(
+                        Box(
+                            modifier = Modifier.weight(1f, true)
+                        )
+
+                        Button(
                             onClick = {
                                 news.associatedProject?.let { onOpenProject(it) }
                             },
-                            label = {
+                            content = {
                                 Icon(
                                     imageVector = Icons.Default.OpenInNew,
                                     contentDescription = null
@@ -173,11 +177,7 @@ fun HomeNewsItem(
                                 Text(
                                     text = "Open Project"
                                 )
-                            },
-                            colors = SuggestionChipDefaults.elevatedSuggestionChipColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                labelColor = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
+                            }
                         )
                     }
                 }

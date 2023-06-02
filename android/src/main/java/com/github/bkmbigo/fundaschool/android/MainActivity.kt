@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import com.github.bkmbigo.fundaschool.di.commonModule
+import com.github.bkmbigo.fundaschool.di.expectedModule
 import com.github.bkmbigo.fundaschool.presentation.screens.home.HomeScreen
 import com.github.bkmbigo.fundaschool.presentation.theme.FundASchoolTheme
 import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
@@ -19,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         startKoin {
-            modules(commonModule)
+            modules(commonModule, expectedModule)
         }
 
         setContent {

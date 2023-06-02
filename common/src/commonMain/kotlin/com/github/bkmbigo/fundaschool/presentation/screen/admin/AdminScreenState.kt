@@ -7,17 +7,17 @@ import com.github.bkmbigo.fundaschool.domain.models.Project
 data class AdminScreenState(
     val isAdmin:Boolean = false,
     // Overview Values
-    val completedProjects: Int,
-    val totalDonations: Float,
-    val ongoingProjects: Float,
-    val totalDonors: Int,
+    val completedProjects: Int = 0,
+    val totalDonations: Float = 0f,
+    val ongoingProjects: Int = 0,
+    val totalDonors: Int = 0,
 
     //news
-    val news: List<News>,
+    val news: List<News> = emptyList(),
 
     //projects
-    val projects: List<Project>,
+    val projects: List<Project> = emptyList(),
 
     // Donations
-    val donations: List<Donation>
+    val donations: List<Donation> = emptyList()
 )

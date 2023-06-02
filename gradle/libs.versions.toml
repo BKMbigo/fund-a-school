@@ -29,7 +29,7 @@ google-services = "4.3.15"
 firebase-bom = "32.1.0"
 firebase-crashlytics-gradle = "2.9.5"
 
-android-argon-kt = "1.4.0"
+sqaure-in_app_sdk = "1.6.2"
 
 image-loader = "1.4.4"
 
@@ -61,8 +61,6 @@ kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatform-settings" }
-firebase-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "firebase-kotlin-sdk" }
-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "firebase-kotlin-sdk" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin-compose" }
 
@@ -74,13 +72,20 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 
 routing-compose = { group = "app.softwork", name="routing-compose", version.ref="routing-compose" }
 
-android-argon-kt = { group = "com.lambdapioneer.argon2kt", name = "argon2kt", version.ref= "android-argon-kt" }
+square-card = { group = "com.squareup.sdk.in-app-payments", name = "card-entry", version.ref = "sqaure-in_app_sdk" }
+square-google_pay = { group = "com.squareup.sdk.in-app-payments", name = "google-pay", version.ref = "sqaure-in_app_sdk" }
 
 ktor-client-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "ktor-client" }
 image-loader = { group = "io.github.qdsfdhvh", name = "image-loader", version.ref = "image-loader" }
 
+gitlive-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "firebase-kotlin-sdk" }
+gitlive-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "firebase-kotlin-sdk" }
+
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-common = { group = "com.google.firebase", name = "firebase-common" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
 
 # included in buildSrc
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }

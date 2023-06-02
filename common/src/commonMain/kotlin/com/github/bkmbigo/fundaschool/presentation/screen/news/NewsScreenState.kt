@@ -4,5 +4,6 @@ import com.github.bkmbigo.fundaschool.domain.models.News
 
 data class NewsScreenState(
     val news: News,
-    val isAdmin: Boolean = false
+    val isAdmin: Boolean = false,
+    val isEditing: Boolean = false
 )

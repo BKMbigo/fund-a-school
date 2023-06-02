@@ -15,16 +15,20 @@ import androidx.compose.ui.unit.DpSize
  * @param size DpSize
  */
 fun Modifier.applyCustomSize(size: DpSize): Modifier =
-    then(
-        when(size.height) {
-            Dp.Infinity -> Modifier.fillMaxHeight()
-            Dp.Unspecified -> Modifier
-            else -> Modifier.height(size.height)
-        }
-    ).then(
-        when(size.width) {
-            Dp.Infinity -> Modifier.fillMaxWidth()
-            Dp.Unspecified -> Modifier
-            else -> Modifier.width(size.width)
-        }
-    )
+    if (size == DpSize.Unspecified) {
+        this
+    } else {
+        then(
+            when(size.height) {
+                Dp.Unspecified -> Modifier
+                Dp.Infinity -> Modifier.fillMaxHeight()
+                else -> Modifier.height(size.height)
+            }
+        ).then(
+            when(size.width) {
+                Dp.Unspecified -> Modifier
+                Dp.Infinity -> Modifier.fillMaxWidth()
+                else -> Modifier.width(size.width)
+            }
+        )
+    }

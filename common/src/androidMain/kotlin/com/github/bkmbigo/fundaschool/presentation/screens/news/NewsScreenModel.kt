@@ -1,0 +1,84 @@
+package com.github.bkmbigo.fundaschool.presentation.screens.news
+
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.coroutineScope
+import com.github.bkmbigo.fundaschool.domain.models.News
+import com.github.bkmbigo.fundaschool.domain.repositories.AuthRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.NewsRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.UserRepository
+import com.github.bkmbigo.fundaschool.domain.utils.NewsCategory
+import com.github.bkmbigo.fundaschool.presentation.screen.news.NewsScreenState
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+
+class NewsScreenModel(
+    private val news: News?,
+    private val authRepository: AuthRepository,
+    private val newsRepository: NewsRepository,
+    private val userRepository: UserRepository
+) : ScreenModel {
+    private val isNew = news == null
+
+    private val _state = MutableStateFlow(
+        NewsScreenState(
+            news ?: News(
+                "",
+                "",
+                "",
+                NewsCategory.NEW_PROJECTS,
+                Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date,
+                "",
+                "",
+                null,
+                emptyList()
+            ),
+            isEditing = news?.let{ false } ?: true
+        )
+    )
+    val state = _state.asStateFlow()
+
+    init {
+        checkIfUserIsAdmin()
+    }
+
+    private fun checkIfUserIsAdmin() {
+        coroutineScope.launch {
+            _state.value = _state.value.copy(
+                isAdmin = authRepository
+                    .currentUser()?.let { currentUser -> userRepository.getUser(currentUser.uid)?.isAdmin } ?: false
+            )
+        }
+    }
+
+    fun toggleEditing() {
+        _state.value = _state.value.copy(isEditing = !_state.value.isEditing)
+    }
+
+    fun saveNews(news: News) {
+        coroutineScope.launch {
+            if (isNew) {
+                newsRepository.insertNews(news)
+            } else {
+                newsRepository.updateNews(news)
+            }
+            _state.value = _state.value.copy(
+                news = news,
+                isEditing = false
+            )
+        }
+    }
+
+    fun deleteNews() {
+        coroutineScope.launch {
+            if (news != null) {
+                newsRepository.deleteNews(news)
+            }
+        }
+    }
+
+}

@@ -1,3 +1,5 @@
+import java.net.URI
+
 pluginManagement {
     repositories {
         google()
@@ -11,9 +13,13 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url = URI.create("https://sdk.squareup.com/public/android")
+        }
     }
 }
 
 rootProject.name = "fund-a-school"
 
 include(":android", ":common")
+include("firebase")

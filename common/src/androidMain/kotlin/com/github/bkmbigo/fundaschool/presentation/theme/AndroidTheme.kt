@@ -33,11 +33,11 @@ actual fun SetUpView() {
     val view = LocalView.current
     if (!view.isInEditMode) {
         val isDarkTheme = isSystemInDarkTheme()
-        val color = colorScheme.surface.toArgb()
+        val color = colorScheme.background.toArgb()
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = color
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = isDarkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !isDarkTheme
         }
     }
 }

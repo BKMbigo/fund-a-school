@@ -1,9 +1,10 @@
 package com.github.bkmbigo.fundaschool.presentation.components.dialog.login
 
-import dev.gitlive.firebase.auth.FirebaseAuth
+import com.github.bkmbigo.fundaschool.domain.repositories.AuthRepository
+
 
 class LogoutPresenter(
-    private val auth: FirebaseAuth
+    private val auth: AuthRepository
 ) {
-    suspend fun logoutUser() = auth.signOut()
+    suspend fun logoutUser() = auth.logout()
 }

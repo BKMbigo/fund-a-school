@@ -1,3 +1,5 @@
+import java.net.URI
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.androidApplication)
@@ -10,7 +12,11 @@ group = "com.github.bkmbigo.fundaschool"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    jcenter()
+    google()
+    mavenCentral()
+    maven {
+        url = URI.create("https://sdk.squareup.com/public/android")
+    }
 }
 
 dependencies {

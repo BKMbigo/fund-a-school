@@ -28,7 +28,7 @@ fun DialogLayout(
         modifier = Modifier
             .widthIn(min = 300.dp)
             .width(IntrinsicSize.Min)
-            .heightIn(min = 250.dp)
+            .height(IntrinsicSize.Max)
             .padding(horizontal = 24.dp, vertical = 32.dp)
             .clip(RoundedCornerShape(16.dp))
             .shadow(8.dp, RoundedCornerShape(16.dp))
@@ -61,6 +61,7 @@ fun DialogLayout(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .height(IntrinsicSize.Min)
                 .padding(horizontal = 16.dp, vertical = 8.dp)
         ) {
             content()

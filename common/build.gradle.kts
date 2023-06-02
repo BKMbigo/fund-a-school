@@ -1,3 +1,5 @@
+import java.net.URI
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.androidLibrary)
@@ -5,6 +7,14 @@ plugins {
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.googleServices)
+}
+
+repositories {
+    google()
+    mavenCentral()
+    maven {
+        url = URI.create("https://sdk.squareup.com/public/android")
+    }
 }
 
 kotlin {
@@ -16,12 +26,11 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(project(":firebase"))
+
                 api(libs.kotlinx.coroutines)
                 api(libs.kotlinx.datetime)
                 api(libs.kotlinx.serialization.json)
-
-                implementation(libs.firebase.firestore)
-                implementation(libs.firebase.auth)
 
                 implementation(compose.runtime)
                 implementation(compose.foundation)
@@ -45,8 +54,6 @@ kotlin {
                 implementation(libs.androidx.core.ktx)
                 implementation(libs.androidx.activity)
 
-                implementation(libs.android.argon.kt)
-
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.foundation.layout)
@@ -58,6 +65,7 @@ kotlin {
                 implementation(libs.compose.ui.graphics)
                 implementation(libs.compose.animation)
 
+                api(libs.square.card)
 
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.transitions)
@@ -67,9 +75,12 @@ kotlin {
             dependencies {
                 implementation(compose.html.core)
 
+                //implementation(libs.gitlive.auth)
+
                 implementation(libs.routing.compose)
 
-                implementation(npm("argon2-browser", "^1.0.0"))
+
+                implementation(npm("firebase", "9.4.1"))
             }
         }
     }

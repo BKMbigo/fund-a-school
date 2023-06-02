@@ -41,81 +41,16 @@ internal fun featuredProject(
 ) {
     val layoutProperties = LocalLayoutProperty.current
 
-    val remainingDays = remember(project) {
-        Clock.System.now()
-            .toLocalDateTime(TimeZone.currentSystemDefault()).date.toEpochDays() - project.completionDate.toEpochDays()
-    }
-
     ElevatedCard(
         onClick = onProjectOpened,
         modifier = modifier.applyCustomSize(size),
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f, true)
-        ) {
-            if (project.media.isNotEmpty()) {
-                MediaImageView(
-                    media = project.media.first(),
-                    modifier = Modifier.fillMaxSize(),
-                    options = MainMediaImageViewOptions(ContentScale.Crop)
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.tertiaryContainer),
-                )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 4.dp,
-                    ),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                AnimatedVisibility(
-                    remainingDays <= 90,
-                    enter = expandHorizontally(
-                        animationSpec = spring(
-                            stiffness = Spring.StiffnessVeryLow
-                        ),
-                        expandFrom = Alignment.Start,
-                        initialWidth = { 0 }
-                    )
-                ) {
-                    ElevatedAssistChip(
-                        onClick = {},
-                        label = {
-                            Spacer(modifier = Modifier.width(4.dp))
-
-                            Text(
-                                text = "$remainingDays days to go",
-                                style = layoutProperties.TextStyle.bodyEmphasis
-                            )
-                        }
-                    )
-                }
-
-                Box(
-                    modifier = Modifier.weight(1f, true)
-                )
-
-                IconButton(
-                    onClick = onProjectBookmarked
-                ) {
-                    Icon(
-                        imageVector = if (isProjectBookmarked) Icons.Default.Bookmark
-                        else Icons.Default.BookmarkRemove,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-        }
+        ProjectMediaView(
+            project,
+            isProjectBookmarked = isProjectBookmarked,
+            modifier = Modifier.fillMaxWidth().weight(1f, true),
+            onBookmarkChanged = onProjectBookmarked
+        )
 
         Column(
             modifier = Modifier
@@ -128,6 +63,7 @@ internal fun featuredProject(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
+                textAlign = TextAlign.Center,
                 style = layoutProperties.TextStyle.informationTitle
             )
 
@@ -140,19 +76,21 @@ internal fun featuredProject(
             ) {
                 Icon(
                     imageVector = Icons.Default.School,
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
                 )
 
                 if (project.schools.isNotEmpty()) {
                     Text(
                         text = project.schools.joinToString(", "),
-                        style = MaterialTheme.typography.bodySmall
+                        style = layoutProperties.TextStyle.informationText,
+                        textAlign = TextAlign.End,
                     )
                 } else {
                     Text(
                         text = "Unspecified",
                         textAlign = TextAlign.End,
-                        style = MaterialTheme.typography.bodySmall,
+                        style = layoutProperties.TextStyle.informationText,
                         fontStyle = FontStyle.Italic
                     )
                 }
@@ -169,13 +107,14 @@ internal fun featuredProject(
             ) {
                 Icon(
                     imageVector = Icons.Default.CalendarToday,
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
                 )
 
                 Text(
                     text = project.startDate.toString(),
                     textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.bodySmall
+                    style = layoutProperties.TextStyle.informationText
                 )
             }
 
@@ -190,13 +129,14 @@ internal fun featuredProject(
             ) {
                 Icon(
                     imageVector = Icons.Default.Today,
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
                 )
 
                 Text(
                     text = project.completionDate.toString(),
                     textAlign = TextAlign.End,
-                    style = MaterialTheme.typography.bodySmall
+                    style = layoutProperties.TextStyle.informationText
                 )
             }
 
@@ -215,6 +155,7 @@ internal fun featuredProject(
                     .fillMaxWidth()
                     .height(12.dp)
                     .padding(end = 8.dp)
+                    .padding(vertical = 2.dp)
             )
 
             Text(
