@@ -11,8 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.domain.models.Project
-import com.github.bkmbigo.fundaschool.presentation.components.news.MainMediaImageViewOptions
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.presentation.components.news.MediaImageView
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
@@ -31,13 +30,13 @@ fun recentlyEndedProject(
         onClick = onOpenProject,
         modifier = modifier.applyCustomSize(size)
     ) {
-        if(project.media.isNotEmpty()) {
+        if(project.mediaUrl.isNotBlank()) {
             MediaImageView(
-                media = project.media.first(),
+                mediaUrl = project.mediaUrl,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f, true),
-                options = MainMediaImageViewOptions(contentScale = ContentScale.FillHeight)
+                contentScale = ContentScale.FillHeight
             )
         } else {
             Box(

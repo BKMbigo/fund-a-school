@@ -11,7 +11,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.domain.models.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
 

@@ -17,8 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.domain.models.Project
-import com.github.bkmbigo.fundaschool.presentation.components.news.MainMediaImageViewOptions
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.presentation.components.news.MediaImageView
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import kotlinx.datetime.Clock
@@ -38,7 +37,7 @@ internal fun ProjectMediaView(
     val remainingDays = remember(project) {
         val days = Clock.System.now()
             .toLocalDateTime(TimeZone.currentSystemDefault())
-            .date.toEpochDays() - project.completionDate.toEpochDays()
+            .date.toEpochDays() - project.completionDate
 
         if (days in 1..59) {
             days
@@ -48,11 +47,11 @@ internal fun ProjectMediaView(
     Box(
         modifier = modifier
     ) {
-        if (project.media.isNotEmpty()) {
+        if (project.mediaUrl.isNotBlank()) {
             MediaImageView(
-                media = project.media.first(),
+                mediaUrl = project.mediaUrl,
                 modifier = Modifier.fillMaxSize(),
-                options = MainMediaImageViewOptions(ContentScale.Crop)
+                contentScale = ContentScale.Crop
             )
         } else {
             Box(

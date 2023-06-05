@@ -1,11 +1,14 @@
 package com.github.bkmbigo.fundaschool.presentation.screens.admin
 
-import androidx.compose.runtime.collectAsState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
-import com.github.bkmbigo.fundaschool.domain.models.Donation
-import com.github.bkmbigo.fundaschool.domain.models.Project
-import com.github.bkmbigo.fundaschool.domain.repositories.*
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Donation
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.AuthRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.DonationRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.NewsRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.ProjectRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.UserRepository
 import com.github.bkmbigo.fundaschool.presentation.screen.admin.AdminScreenState
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +29,7 @@ class AdminScreenModel(
     private val _state = MutableStateFlow(AdminScreenState())
     val state = _state.asStateFlow()
 
-    private val todayDateEpochs = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    private val todayDateEpochs = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toEpochDays()
 
     init {
         coroutineScope.launch {
@@ -35,7 +38,7 @@ class AdminScreenModel(
             val allNews = async { newsRepository.getAllNews() }
             val isAdmin = async {
                 authRepository.currentUser()?.let {
-                    userRepository.getUser(it.uid)?.isAdmin
+                    userRepository.getUser(it.uid)?.admin
                 } ?: false
             }
 

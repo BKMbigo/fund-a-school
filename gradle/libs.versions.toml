@@ -16,7 +16,7 @@ kotlinx-datetime = "0.4.0"
 kotlinx-immutable = "0.3.5"
 kotlinx-coroutines = "1.7.1"
 kotlinx-serialization = "1.5.1"
-ktor-client = "2.2.4"
+ktor-client = "2.3.1"
 
 multiplatform-settings = "1.0.0"
 firebase-kotlin-sdk = "1.8.0"
@@ -58,10 +58,12 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-immutable" }
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-jdk8 = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-jdk8", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 multiplatform-settings = { group = "com.russhwolf", name = "multiplatform-settings", version.ref = "multiplatform-settings" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin-compose" }
 
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
@@ -75,7 +77,14 @@ routing-compose = { group = "app.softwork", name="routing-compose", version.ref=
 square-card = { group = "com.squareup.sdk.in-app-payments", name = "card-entry", version.ref = "sqaure-in_app_sdk" }
 square-google_pay = { group = "com.squareup.sdk.in-app-payments", name = "google-pay", version.ref = "sqaure-in_app_sdk" }
 
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor-client" }
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor-client" }
 ktor-client-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "ktor-client" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor-client" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor-client" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor-client" }
+
+
 image-loader = { group = "io.github.qdsfdhvh", name = "image-loader", version.ref = "image-loader" }
 
 gitlive-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "firebase-kotlin-sdk" }

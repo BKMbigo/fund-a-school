@@ -1,11 +1,12 @@
+import org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile
 import java.net.URI
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinSerialization)
-    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.googleServices)
 }
 
@@ -26,7 +27,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":firebase"))
 
                 api(libs.kotlinx.coroutines)
                 api(libs.kotlinx.datetime)
@@ -41,6 +41,11 @@ kotlin {
 
                 implementation(libs.image.loader)
 
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.logging)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
+
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
             }
@@ -50,6 +55,8 @@ kotlin {
 
             dependencies {
                 implementation(platform("androidx.compose:compose-bom:2023.05.01"))
+
+                api(libs.kotlinx.coroutines.jdk8)
 
                 implementation(libs.androidx.core.ktx)
                 implementation(libs.androidx.activity)
@@ -67,8 +74,17 @@ kotlin {
 
                 api(libs.square.card)
 
+                implementation(libs.ktor.client.android)
+
+                implementation(libs.koin.android)
+
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.transitions)
+
+                implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
+                implementation(libs.firebase.auth.ktx)
+                //implementation(libs.firebase.common)
+                implementation(libs.firebase.firestore.ktx)
             }
         }
         val jsMain by getting {
@@ -78,7 +94,7 @@ kotlin {
                 //implementation(libs.gitlive.auth)
 
                 implementation(libs.routing.compose)
-
+                implementation(libs.ktor.client.js)
 
                 implementation(npm("firebase", "9.4.1"))
             }
@@ -115,3 +131,11 @@ compose {
     kotlinCompilerPlugin.set(dependencies.compiler.forKotlin("1.8.20"))
     kotlinCompilerPluginArgs.add("suppressKotlinVersionCompatibilityCheck=1.8.21")
 }
+
+
+// In response to Issue: https://github.com/JetBrains/compose-multiplatform/issues/2701
+//tasks.withType<KotlinJsCompile>().configureEach {
+//    kotlinOptions.freeCompilerArgs += listOf(
+//        "-Xklib-enable-signature-clash-checks=false",
+//    )
+//}

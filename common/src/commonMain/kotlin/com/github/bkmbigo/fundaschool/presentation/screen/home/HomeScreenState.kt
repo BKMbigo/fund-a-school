@@ -1,8 +1,8 @@
 package com.github.bkmbigo.fundaschool.presentation.screen.home
 
-import com.github.bkmbigo.fundaschool.domain.models.News
-import com.github.bkmbigo.fundaschool.domain.models.Project
-import com.github.bkmbigo.fundaschool.domain.models.User
+import com.github.bkmbigo.fundaschool.domain.models.firebase.News
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.User
 
 data class HomeScreenState(
     val bookmarks: List<Project> = emptyList(),

@@ -9,53 +9,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import com.github.bkmbigo.fundaschool.domain.models.Media
 import com.github.bkmbigo.fundaschool.domain.utils.MediaType
 import com.seiko.imageloader.rememberAsyncImagePainter
 
 
 @Composable
 fun MediaImageView(
-    media: Media,
+    mediaUrl: String,
     modifier: Modifier = Modifier,
-    options: MainMediaImageViewOptions = MainMediaImageViewOptions()
-) {
-    when(media.mediaType) {
-        MediaType.IMAGE -> {
-            Image(
-                painter = rememberAsyncImagePainter(media.url),
-                modifier = modifier,
-                contentDescription = null,
-                contentScale = options.contentScale,
-            )
-        }
-        MediaType.VIDEO -> {
-            Text(
-                text = "Video support To be added later",
-                modifier = modifier.background(MaterialTheme.colorScheme.tertiaryContainer),
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-        MediaType.AUDIO -> {
-            Text(
-                text = "Audio support To be added later",
-                modifier = modifier.background(MaterialTheme.colorScheme.tertiaryContainer),
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-        MediaType.EMBEDDED_VIDEO -> {
-            Text(
-                text = "Video support To be added later",
-                modifier = modifier.background(MaterialTheme.colorScheme.tertiaryContainer),
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
-}
-
-data class MainMediaImageViewOptions(
-    val contentScale: ContentScale = ContentScale.FillWidth
-)
+    contentScale: ContentScale = ContentScale.FillWidth
+) = Image(
+        painter = rememberAsyncImagePainter(mediaUrl),
+        modifier = modifier,
+        contentDescription = null,
+        contentScale = contentScale,
+    )

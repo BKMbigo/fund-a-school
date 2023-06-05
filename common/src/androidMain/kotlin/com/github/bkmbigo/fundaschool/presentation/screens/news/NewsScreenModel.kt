@@ -2,17 +2,17 @@ package com.github.bkmbigo.fundaschool.presentation.screens.news
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
-import com.github.bkmbigo.fundaschool.domain.models.News
-import com.github.bkmbigo.fundaschool.domain.repositories.AuthRepository
-import com.github.bkmbigo.fundaschool.domain.repositories.NewsRepository
-import com.github.bkmbigo.fundaschool.domain.repositories.UserRepository
+import com.github.bkmbigo.fundaschool.domain.models.firebase.News
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.AuthRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.NewsRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.UserRepository
 import com.github.bkmbigo.fundaschool.domain.utils.NewsCategory
 import com.github.bkmbigo.fundaschool.presentation.screen.news.NewsScreenState
+import com.github.bkmbigo.fundaschool.utils.LogInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
@@ -35,7 +35,7 @@ class NewsScreenModel(
                 "",
                 "",
                 null,
-                emptyList()
+                ""
             ),
             isEditing = news?.let{ false } ?: true
         )
@@ -50,7 +50,15 @@ class NewsScreenModel(
         coroutineScope.launch {
             _state.value = _state.value.copy(
                 isAdmin = authRepository
-                    .currentUser()?.let { currentUser -> userRepository.getUser(currentUser.uid)?.isAdmin } ?: false
+                    .currentUser()?.let { currentUser ->
+                        val uid = currentUser.uid
+                        LogInfo("Current UID: $uid")
+                        val user = userRepository.getUser(currentUser.uid)
+                        LogInfo("Current User: ${user}")
+                        val isAdm = user?.admin
+                        LogInfo("Value is Admin: $isAdm")
+                        isAdm
+                    } ?: false
             )
         }
     }

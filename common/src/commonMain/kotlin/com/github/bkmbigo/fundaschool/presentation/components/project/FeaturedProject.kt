@@ -1,33 +1,21 @@
 package com.github.bkmbigo.fundaschool.presentation.components.project
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.expandHorizontally
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.github.bkmbigo.fundaschool.domain.models.Project
-import com.github.bkmbigo.fundaschool.presentation.components.news.MainMediaImageViewOptions
-import com.github.bkmbigo.fundaschool.presentation.components.news.MediaImageView
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,7 +70,7 @@ internal fun featuredProject(
 
                 if (project.schools.isNotEmpty()) {
                     Text(
-                        text = project.schools.joinToString(", "),
+                        text = project.schools,
                         style = layoutProperties.TextStyle.informationText,
                         textAlign = TextAlign.End,
                     )

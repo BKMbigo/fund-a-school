@@ -2,14 +2,14 @@ package com.github.bkmbigo.fundaschool.presentation.screens.home
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
-import com.github.bkmbigo.fundaschool.domain.models.Donation
-import com.github.bkmbigo.fundaschool.domain.models.News
-import com.github.bkmbigo.fundaschool.domain.models.Project
-import com.github.bkmbigo.fundaschool.domain.models.User
-import com.github.bkmbigo.fundaschool.domain.repositories.DonationRepository
-import com.github.bkmbigo.fundaschool.domain.repositories.NewsRepository
-import com.github.bkmbigo.fundaschool.domain.repositories.ProjectRepository
-import com.github.bkmbigo.fundaschool.domain.repositories.UserRepository
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Donation
+import com.github.bkmbigo.fundaschool.domain.models.firebase.News
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.User
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.DonationRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.NewsRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.ProjectRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.UserRepository
 import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -78,7 +78,7 @@ class HomeScreenModel(
         this.filter { it.featured }
 
     private fun List<Project>.getRecentlyProjects(): List<Project> =
-        this.filter { it.completionDate.toEpochDays() > Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toEpochDays() - 30 }
+        this.filter { it.completionDate > Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toEpochDays() - 30 }
 
     private suspend fun List<Donation>.getTopDonors(): List<User> =
         this
@@ -86,9 +86,9 @@ class HomeScreenModel(
             .mapValues { list -> list.value.map { it.amount }.sum() }
             .toList().sortedBy { it.second }
             .take(5)
-            .mapNotNull {
-                getUser(it.first)
-            }
+            .map {
+                it.first?.let { it1 -> getUser(it1) }
+            }.filterNotNull()
 
 
 

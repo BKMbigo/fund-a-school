@@ -171,9 +171,9 @@ fun SmallNewsScreen(
 
                 Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp))
 
-                if (state.news.media.isNotEmpty()) {
+                if (state.news.mediaUrl.isNotBlank()) {
                     MediaImageView(
-                        media = state.news.media.first(),
+                        mediaUrl = state.news.mediaUrl,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp, horizontal = 4.dp)

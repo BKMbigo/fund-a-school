@@ -1,8 +1,9 @@
 package com.github.bkmbigo.fundaschool.presentation.screen.donations
 
-import com.github.bkmbigo.fundaschool.domain.models.Donation
+import com.github.bkmbigo.fundaschool.presentation.components.donations.DonationListItem
 
 data class DonationsScreenState(
-    val donations: List<Donation> = emptyList(),
+    val topDonations: List<DonationListItem> = emptyList(),
+    val latestDonations: List<DonationListItem> = emptyList(),
     val isAdmin: Boolean = false
 )

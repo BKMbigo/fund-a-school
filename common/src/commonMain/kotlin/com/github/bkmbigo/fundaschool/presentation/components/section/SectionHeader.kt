@@ -87,6 +87,7 @@ fun SectionHeader(
 
         AnimatedVisibility(
             visible = showSearchField,
+            modifier = Modifier.fillMaxWidth(),
             enter = expandVertically(
                 animationSpec = spring(
                     stiffness = Spring.StiffnessVeryLow
@@ -100,12 +101,15 @@ fun SectionHeader(
                 shrinkTowards = Alignment.Top
             )
         ) {
-            Row {
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 OutlinedTextField(
                     value = searchText,
                     onValueChange = {
                         searchText = it
                     },
+                    modifier = Modifier.weight(1f),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,

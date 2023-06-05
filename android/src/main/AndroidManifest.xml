@@ -5,6 +5,7 @@
 
     <application
             android:label="Fund A School"
+            android:name="com.github.bkmbigo.fundaschool.android.FundASchoolApplication"
             android:allowBackup="false"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

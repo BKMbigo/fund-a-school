@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.voyager.navigator)
 
     implementation(libs.koin.core)
+    implementation(libs.koin.android)
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics.ktx)

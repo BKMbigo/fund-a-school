@@ -1,16 +1,18 @@
 package com.github.bkmbigo.fundaschool.di
 
-import com.github.bkmbigo.fundaschool.domain.repositories.AuthRepository
 import dev.gitlive.firebase.*
-import dev.gitlive.firebase.auth.auth
+import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
 import org.koin.dsl.module
 
 actual val expectedModule = module {
-    val firebaseApp = Firebase.initialize(null, FirebaseConfig, "my_app")
+//    val firebaseApp = external.firebase.app.initializeApp(options = FirebaseConfig.toJson())
+//    val auth = external.firebase.auth.initializeAuth(firebaseApp)
+//    val firestore = external.firebase.firestore.getFirestore(firebaseApp)
+    val firebaseApp = Firebase.initialize(null, FirebaseConfig)
 
     single { firebaseApp }
-    single { Firebase.auth }
-    single { Firebase.firestore }
+    single { Firebase.auth(firebaseApp) }
+    single { Firebase.firestore(firebaseApp) }
 
 }

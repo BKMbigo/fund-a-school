@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.domain.models.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,7 +65,7 @@ internal fun ProjectListItem(
                 )
 
                 Text(
-                    text = project.schools.joinToString(),
+                    text = project.schools,
                     style = layoutProperties.TextStyle.informationText,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -107,7 +107,7 @@ internal fun ProjectListItem(
                     )
                 }
 
-                Divider(modifier = Modifier.fillMaxHeight().padding(horizontal = 4.dp))
+//                Divider(modifier = Modifier.fillMaxHeight().padding(horizontal = 4.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),

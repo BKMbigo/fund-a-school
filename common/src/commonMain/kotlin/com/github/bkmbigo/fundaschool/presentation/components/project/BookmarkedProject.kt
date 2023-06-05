@@ -4,8 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandHorizontally
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
@@ -21,9 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.domain.models.Media
-import com.github.bkmbigo.fundaschool.domain.models.Project
-import com.github.bkmbigo.fundaschool.presentation.components.news.MainMediaImageViewOptions
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.presentation.components.news.MediaImageView
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
@@ -42,7 +38,7 @@ internal fun bookmarkedProject(
     val remainingDays by remember {
         derivedStateOf {
             Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toEpochDays()
-            - project.completionDate.toEpochDays()
+            - project.completionDate
         }
     }
 
@@ -83,7 +79,7 @@ internal fun bookmarkedProject(
             Spacer(modifier = Modifier.width(4.dp))
 
             AnimatedVisibility(
-                visible = project.media.isNotEmpty(),
+                visible = project.mediaUrl.isNotEmpty(),
                 modifier = Modifier.fillMaxHeight(),
                 enter = expandHorizontally(
                     animationSpec = spring(
@@ -92,11 +88,11 @@ internal fun bookmarkedProject(
                     expandFrom = Alignment.End
                 ),
             ) {
-                if (project.media.isNotEmpty()) {
+                if (project.mediaUrl.isNotBlank()) {
                     MediaImageView(
-                        media = project.media.first(),
+                        mediaUrl = project.mediaUrl,
                         modifier = Modifier.fillMaxHeight(),
-                        options = MainMediaImageViewOptions(contentScale = ContentScale.Crop)
+                        contentScale = ContentScale.Crop
                     )
                 }
             }

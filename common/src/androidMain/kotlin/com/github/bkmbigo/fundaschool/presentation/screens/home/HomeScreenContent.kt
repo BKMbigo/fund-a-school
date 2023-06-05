@@ -26,9 +26,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.github.bkmbigo.fundaschool.domain.models.Media
-import com.github.bkmbigo.fundaschool.domain.models.News
-import com.github.bkmbigo.fundaschool.domain.models.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.News
 import com.github.bkmbigo.fundaschool.domain.utils.MediaType
 import com.github.bkmbigo.fundaschool.domain.utils.NewsCategory
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.homeaction.HomeActionDialog
@@ -239,14 +237,21 @@ internal fun HomeScreenContent(
                     properties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     LoginDialog(
-                        onDismissRequest = { showLoginDialog = false }
+                        onDismissRequest = {
+                            showLoginDialog = false
+                            isOptionsDialogOpen = false
+                        }
                     )
                 }
             }
 
             if (showLogoutDialog) {
                 Dialog(
-                    onDismissRequest = { showLoginDialog = false }
+                    onDismissRequest = {
+                        showLoginDialog = false
+                        showLogoutDialog = false
+                        isOptionsDialogOpen = false
+                    }
                 ) {
                     LogoutDialog(
                         onDismissRequest = { showLogoutDialog = false }
@@ -273,13 +278,7 @@ private fun PreviewHomeScreenContent() {
                 text = "",
                 author = "",
                 associatedProject = null,
-                media = listOf(
-                    Media(
-                        id = "wess",
-                        mediaType = MediaType.IMAGE,
-                        url = "https://images.unsplash.com/flagged/photo-1579133311477-9121405c78dd?ixlib=rb-4.0.3"
-                    )
-                )
+                mediaUrl = "https://images.unsplash.com/flagged/photo-1579133311477-9121405c78dd?ixlib=rb-4.0.3"
             )
         },
 

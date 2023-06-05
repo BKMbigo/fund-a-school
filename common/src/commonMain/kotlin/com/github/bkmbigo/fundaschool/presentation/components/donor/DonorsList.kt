@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.domain.models.User
+import com.github.bkmbigo.fundaschool.domain.models.firebase.User
 import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
 
 @Composable

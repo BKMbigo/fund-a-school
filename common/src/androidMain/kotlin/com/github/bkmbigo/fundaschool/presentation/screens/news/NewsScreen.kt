@@ -8,7 +8,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.bkmbigo.fundaschool.di.withKoin
-import com.github.bkmbigo.fundaschool.domain.models.News
+import com.github.bkmbigo.fundaschool.domain.models.firebase.News
 import com.github.bkmbigo.fundaschool.presentation.screen.news.NewsScreenAction
 
 class NewsScreen(val news: News?): Screen {

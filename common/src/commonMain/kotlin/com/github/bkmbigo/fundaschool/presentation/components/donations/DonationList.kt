@@ -2,7 +2,7 @@ package com.github.bkmbigo.fundaschool.presentation.components.donations
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedCard
@@ -10,13 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.domain.models.Project
-import com.github.bkmbigo.fundaschool.domain.models.User
 import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
 
 @Composable
 fun DonationList(
-    donations: Map<User, Pair<Project, Float>>,
+    donations: List<DonationListItem>,
     title: @Composable RowScope.() -> Unit,
     size: DpSize,
     modifier: Modifier = Modifier
@@ -41,12 +39,9 @@ fun DonationList(
                 .weight(1f, true)
                 .fillMaxWidth(),
         ) {
-            itemsIndexed(donations.toList()) { index, donation ->
+            items(donations.toList()) { donation ->
                 DonationItem(
-                    index = index,
-                    user = donation.first,
-                    project = donation.second.first,
-                    amount = donation.second.second,
+                    donationListItem = donation,
                     modifier = Modifier.fillMaxWidth()
                 )
             }

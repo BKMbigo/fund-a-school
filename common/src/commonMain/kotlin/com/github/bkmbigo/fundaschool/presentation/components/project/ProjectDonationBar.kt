@@ -11,11 +11,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import com.github.bkmbigo.fundaschool.domain.models.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Sponsorship
 
 @Composable
 fun ProjectDonationBar(
     project: Project,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary,
+    trackColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+) {
+    DonationBar(
+        progress = (project.currentAmount / project.targetAmount).coerceIn(0.0f, 1.0f),
+        modifier = modifier,
+        color = color,
+        trackColor = trackColor
+    )
+}
+
+@Composable
+fun SponsorshipDonationBar(
+    sponsorship: Sponsorship,
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary,
+    trackColor: Color = MaterialTheme.colorScheme.surfaceVariant
+) {
+    DonationBar(
+        progress = (sponsorship.currentAmount / sponsorship.targetAmount).coerceIn(0.0f, 1.0f),
+        modifier = modifier,
+        color = color,
+        trackColor = trackColor
+    )
+}
+
+/**
+ * @param progress Progress of the bar (from 0.0 to 1.0)
+ */
+@Composable
+private fun DonationBar(
+    progress: Float,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
     trackColor: Color = MaterialTheme.colorScheme.surface,
@@ -41,7 +75,7 @@ fun ProjectDonationBar(
         drawRoundRect(
             color = color,
             topLeft = Offset.Zero,
-            size = size * (project.currentAmount / project.targetAmount) * animatedSize,
+            size = size * progress* animatedSize,
             cornerRadius = CornerRadius(10f, 10f)
         )
     }

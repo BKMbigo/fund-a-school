@@ -7,7 +7,6 @@ import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -26,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.presentation.components.list.HorizontalScrollableList
-import com.github.bkmbigo.fundaschool.presentation.components.news.MainMediaImageViewOptions
 import com.github.bkmbigo.fundaschool.presentation.components.news.MediaImageView
 import com.github.bkmbigo.fundaschool.presentation.components.project.ProjectInformationCard
 import com.github.bkmbigo.fundaschool.presentation.screen.project.ProjectScreenAction
@@ -70,12 +68,16 @@ fun SmallProjectScreen(
         }
 
         Column(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
         ) {
             if (!state.isEditing) {
                 Text(
                     text = state.project.name,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 4.dp),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 4.dp),
                     style = layoutProperties.TextStyle.pageTitle
                 )
             } else {
@@ -84,7 +86,9 @@ fun SmallProjectScreen(
                     onValueChange = {
                         titleText = it
                     },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
                     textStyle = layoutProperties.TextStyle.pageTitle.copy(textAlign = TextAlign.Center),
                     shape = RoundedCornerShape(12.dp)
                 )
@@ -183,9 +187,9 @@ fun SmallProjectScreen(
             }
 
 
-            if(state.project.media.isNotEmpty()){
+            if(state.project.mediaUrl.isNotBlank()){
                 MediaImageView(
-                    media = state.project.media.first(),
+                    mediaUrl = state.project.mediaUrl,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
@@ -197,8 +201,10 @@ fun SmallProjectScreen(
 
             if(!state.isEditing) {
                 Text(
-                    text = state.project.name,
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    text = state.project.description,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
                     style = layoutProperties.TextStyle.bodyText
                 )
             } else {
@@ -207,11 +213,17 @@ fun SmallProjectScreen(
                     onValueChange = {
                         textText = it
                     },
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
                     textStyle = layoutProperties.TextStyle.pageSubTitle.copy(textAlign = TextAlign.Center),
                     shape = RoundedCornerShape(12.dp)
                 )
             }
+
+            Divider(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp))
 
             Text(
                 text = "Information",
@@ -226,32 +238,54 @@ fun SmallProjectScreen(
                 modifier = Modifier
                     .width(IntrinsicSize.Max)
                     .height(IntrinsicSize.Min)
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 8.dp, vertical = 4.dp)
                     .align(Alignment.CenterHorizontally),
                 isEditing = state.isEditing
             )
 
-            Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp))
+            Divider(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp))
+
+            Text(
+                text = "Donate",
+                style = layoutProperties.TextStyle.sectionTitle
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Button(
+                    onClick = { onAction(ProjectScreenAction.DonateToProject) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Money,
+                        contentDescription = null
+                    )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Text(
+                        text = "Donate"
+                    )
+                }
+            }
+
+
+
+            Divider(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp))
 
             Text(
                 text = "Media",
                 style = layoutProperties.TextStyle.sectionTitle
             )
 
-            HorizontalScrollableList(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                contentPadding = PaddingValues(horizontal = 8.dp)
-            ) {
-                items(state.project.media) { mediaItem ->
-                    MediaImageView(
-                        media = mediaItem,
-                        modifier = Modifier.size(200.dp, 150.dp).animateItemPlacement(),
-                        options = MainMediaImageViewOptions(contentScale = ContentScale.Crop)
-                    )
-                }
-            }
-
-            Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 4.dp))
+            Divider(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 4.dp))
 
             Text(
                 text = "Top Donations",

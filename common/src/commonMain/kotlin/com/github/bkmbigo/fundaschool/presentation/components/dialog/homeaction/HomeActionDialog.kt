@@ -16,12 +16,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.di.withKoin
-import com.github.bkmbigo.fundaschool.domain.repositories.AuthRepository
-import com.github.bkmbigo.fundaschool.domain.repositories.UserRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.AuthRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.UserRepository
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.DialogLayout
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import com.seiko.imageloader.rememberAsyncImagePainter
-import dev.gitlive.firebase.auth.FirebaseUser
+import dev.gitlive.firebase.FirebaseUser
 
 @Composable
 fun HomeActionDialog(
@@ -38,7 +38,7 @@ fun HomeActionDialog(
 
     LaunchedEffect(user) {
         userIsAdmin = user?.let { loggedInUser ->
-            userRepository.getUser(loggedInUser.uid)?.isAdmin ?: false
+            userRepository.getUser(loggedInUser.uid)?.admin ?: false
         } ?: false
     }
 
@@ -104,14 +104,16 @@ fun HomeActionDialog(
                 .padding(horizontal = 12.dp)
         )
 
-        ContainerAction(
-            icon = Icons.Default.Group,
-            title = "About Us",
-            onAction = { onAction(HomeActionDialogAction.NavigateToAboutUs) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-        )
+        if (!userIsAdmin) {
+            ContainerAction(
+                icon = Icons.Default.Group,
+                title = "About Us",
+                onAction = { onAction(HomeActionDialogAction.NavigateToAboutUs) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(4.dp))
 

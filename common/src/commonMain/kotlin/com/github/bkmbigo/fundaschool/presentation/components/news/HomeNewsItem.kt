@@ -2,8 +2,6 @@ package com.github.bkmbigo.fundaschool.presentation.components.news
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
@@ -20,23 +18,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.github.bkmbigo.fundaschool.domain.models.News
-import com.github.bkmbigo.fundaschool.domain.models.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.News
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
-import com.seiko.imageloader.rememberAsyncImagePainter
-import kotlinx.coroutines.launch
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,13 +81,11 @@ fun HomeNewsItem(
                 onOpenNews(news)
             },
     ) {
-        if (news.media.isNotEmpty()) {
+        if (news.mediaUrl.isNotBlank()) {
             MediaImageView(
-                media = news.media.first(),
+                mediaUrl = news.mediaUrl,
                 modifier = Modifier.weight(1f, true),
-                options = MainMediaImageViewOptions(
-                    contentScale = contentScale
-                )
+                contentScale = contentScale
             )
         } else {
             Box(

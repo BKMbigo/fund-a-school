@@ -1,7 +1,7 @@
 package com.github.bkmbigo.fundaschool.presentation.screen.admin
 
-import com.github.bkmbigo.fundaschool.domain.models.News
-import com.github.bkmbigo.fundaschool.domain.models.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.News
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 
 sealed class AdminScreenAction {
     object NavigateUp: AdminScreenAction()

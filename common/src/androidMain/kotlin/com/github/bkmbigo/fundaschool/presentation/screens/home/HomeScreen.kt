@@ -8,12 +8,17 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.bkmbigo.fundaschool.di.withKoin
+import com.github.bkmbigo.fundaschool.presentation.screen.MainScreenAction
 import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenAction
 import com.github.bkmbigo.fundaschool.presentation.screens.admin.AdminScreen
+import com.github.bkmbigo.fundaschool.presentation.screens.donations.DonationsScreen
+import com.github.bkmbigo.fundaschool.presentation.screens.news.NewsScreen
 import com.github.bkmbigo.fundaschool.presentation.screens.project.ProjectScreen
 import com.github.bkmbigo.fundaschool.presentation.screens.projects.ProjectsScreen
+import kotlinx.coroutines.flow.StateFlow
 
-class HomeScreen: Screen {
+class HomeScreen(
+): Screen {
 
     @Composable
     override fun Content() {
@@ -35,11 +40,11 @@ class HomeScreen: Screen {
             onAction = { action ->
                 when(action) {
                     HomeScreenAction.NavigateToAboutUs -> {}
-                    HomeScreenAction.NavigateToAdmin -> { navigator.push(AdminScreen()) }
-                    HomeScreenAction.NavigateToDonations -> {}
-                    HomeScreenAction.NavigateToProjects -> { navigator.push(ProjectsScreen()) }
-                    is HomeScreenAction.NavigateToNews -> { navigator.push(AdminScreen()) }
-                    is HomeScreenAction.NavigateToProject -> { navigator.push(ProjectScreen(action.project)) }
+                    HomeScreenAction.NavigateToAdmin -> { navigator.push(AdminScreen(onMainAction = {  })) }
+                    HomeScreenAction.NavigateToDonations -> { navigator.push(DonationsScreen(onMainAction = {  })) }
+                    HomeScreenAction.NavigateToProjects -> { navigator.push(ProjectsScreen(onMainAction = {  })) }
+                    is HomeScreenAction.NavigateToNews -> { navigator.push(NewsScreen(action.news)) }
+                    is HomeScreenAction.NavigateToProject -> { navigator.push(ProjectScreen(action.project, onMainAction = {  })) }
                     is HomeScreenAction.Search -> {}
                 }
             }

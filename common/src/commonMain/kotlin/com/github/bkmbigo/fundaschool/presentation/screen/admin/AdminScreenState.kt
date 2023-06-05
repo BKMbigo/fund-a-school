@@ -1,8 +1,8 @@
 package com.github.bkmbigo.fundaschool.presentation.screen.admin
 
-import com.github.bkmbigo.fundaschool.domain.models.Donation
-import com.github.bkmbigo.fundaschool.domain.models.News
-import com.github.bkmbigo.fundaschool.domain.models.Project
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Donation
+import com.github.bkmbigo.fundaschool.domain.models.firebase.News
+import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 
 data class AdminScreenState(
     val isAdmin:Boolean = false,

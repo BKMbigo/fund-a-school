@@ -22,4 +22,3 @@ dependencyResolutionManagement {
 rootProject.name = "fund-a-school"
 
 include(":android", ":common")
-include("firebase")

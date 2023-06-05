@@ -1,6 +1,6 @@
 package com.github.bkmbigo.fundaschool.presentation.components.dialog.login
 
-import com.github.bkmbigo.fundaschool.domain.repositories.AuthRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.AuthRepository
 import com.github.bkmbigo.fundaschool.domain.utils.AuthError
 import com.github.bkmbigo.fundaschool.domain.utils.AuthResponse
 import kotlinx.coroutines.channels.Channel
