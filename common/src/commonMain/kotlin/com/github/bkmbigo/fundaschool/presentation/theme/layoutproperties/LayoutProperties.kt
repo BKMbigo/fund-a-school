@@ -1,17 +1,13 @@
 package com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpSize
-import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
+import com.github.bkmbigo.fundaschool.presentation.utils.Platform
 
 interface LayoutProperties {
 
     val TextStyle: TextStyleProperties
-    val formFactor: FormFactor
+    val screenWidth: Int
+    val platform: Platform
 
     interface TextStyleProperties {
         val applicationTitle: TextStyle

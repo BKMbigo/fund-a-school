@@ -14,8 +14,15 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,21 +34,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.github.bkmbigo.fundaschool.domain.models.firebase.News
-import com.github.bkmbigo.fundaschool.domain.utils.MediaType
 import com.github.bkmbigo.fundaschool.domain.utils.NewsCategory
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.homeaction.HomeActionDialog
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.homeaction.HomeActionDialogAction
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.login.LoginDialog
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.login.LogoutDialog
 import com.github.bkmbigo.fundaschool.presentation.components.list.HorizontalScrollableList
-import com.github.bkmbigo.fundaschool.presentation.components.topbar.SmallTopBar
 import com.github.bkmbigo.fundaschool.presentation.components.news.HomeNewsItem
 import com.github.bkmbigo.fundaschool.presentation.components.project.ProjectItem
-import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenState
+import com.github.bkmbigo.fundaschool.presentation.components.topbar.AdaptiveHomeTopBar
+import com.github.bkmbigo.fundaschool.presentation.components.topbar.AdaptiveHomeTopBarAction
 import com.github.bkmbigo.fundaschool.presentation.theme.FundASchoolTheme
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
-import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -69,14 +73,89 @@ internal fun HomeScreenContent(
             .fillMaxSize()
             .padding(horizontal = 4.dp)
     ) {
-        SmallTopBar(
+        AdaptiveHomeTopBar(
             modifier = Modifier.fillMaxWidth(),
-            onSearch = { onAction(HomeScreenAction.Search(it)) },
-            onOpenDialog = { isOptionsDialogOpen = true }
+            onAction = { action ->
+                when(action) {
+                    AdaptiveHomeTopBarAction.NavigateToAboutUsScreen -> {
+                        onAction(HomeScreenAction.NavigateToAboutUs)
+                    }
+                    AdaptiveHomeTopBarAction.NavigateToAdminScreen -> {
+                        onAction(HomeScreenAction.NavigateToAdmin)
+                    }
+                    AdaptiveHomeTopBarAction.NavigateToDonationsScreen -> {
+                        onAction(HomeScreenAction.NavigateToDonations)
+                    }
+                    AdaptiveHomeTopBarAction.NavigateToProjectsScreen -> {
+                        onAction(HomeScreenAction.NavigateToProjects)
+                    }
+                    AdaptiveHomeTopBarAction.OpenActionsDialog -> {
+                        isOptionsDialogOpen = true
+                    }
+                    is AdaptiveHomeTopBarAction.Search -> {
+                        onAction(HomeScreenAction.Search(action.searchText))
+                    }
+                }
+            }
         )
 
+        if(state.pendingDonation != null){
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 8.dp),
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(all = 4.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    IconButton(
+                        onClick = { onAction(HomeScreenAction.ClearPendingDonation) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = null
+                        )
+                    }
+                }
+
+                Text(
+                    text = "Do you wish to complete the transaction?",
+                    style = layoutProperties.TextStyle.informationText,
+                    modifier = Modifier.padding(4.dp)
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    TextButton(
+                        onClick = {
+                            onAction(HomeScreenAction.ClearPendingDonation)
+                        }
+                    ) {
+                        Text(
+                            text = "No"
+                        )
+                    }
+
+                    Button(
+                        onClick = {
+                            onAction(HomeScreenAction.AcceptPendingDonation)
+                        }
+                    ) {
+                        Text(
+                            text = "Yes"
+                        )
+                    }
+                }
+            }
+        }
+
         Column(
-            modifier = Modifier.fillMaxWidth().verticalScroll(rememberScrollState())
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
         ) {
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -105,19 +184,23 @@ internal fun HomeScreenContent(
                         modifier = Modifier.padding(sectionTitlePadding)
                     )
 
-                    if (layoutProperties.formFactor == FormFactor.PORTRAIT) {
+                    if (layoutProperties.screenWidth < 720) {
                         val pagerState = rememberPagerState()
 
                         HorizontalPager(
                             pageCount = state.news.size,
                             state = pagerState,
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth().padding(sectionListPadding)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(sectionListPadding)
                         ) { index ->
                             HomeNewsItem(
                                 news = state.news[index],
                                 size = DpSize(Dp.Infinity, 200.dp),
-                                modifier = Modifier.fillMaxWidth().padding(sectionListPadding),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(sectionListPadding),
                                 contentScale = ContentScale.Crop,
                                 onOpenProject = { onAction(HomeScreenAction.NavigateToProject(it)) },
                                 onOpenNews = { onAction(HomeScreenAction.NavigateToNews(it)) }
@@ -134,7 +217,9 @@ internal fun HomeScreenContent(
                                 HomeNewsItem(
                                     news = newsItem,
                                     size = DpSize(Dp.Infinity, 200.dp),
-                                    modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp, horizontal = 4.dp),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 4.dp, horizontal = 4.dp),
                                     contentScale = ContentScale.Crop,
                                     onOpenProject = { onAction(HomeScreenAction.NavigateToProject(it)) },
                                     onOpenNews = { onAction(HomeScreenAction.NavigateToNews(it)) }
@@ -157,7 +242,9 @@ internal fun HomeScreenContent(
                     )
 
                     HorizontalScrollableList(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
                         contentPadding = PaddingValues(horizontal = 4.dp)
                     ) {
                         items(state.featuredProjects) { projectItem ->
@@ -237,9 +324,12 @@ internal fun HomeScreenContent(
                     properties = DialogProperties(usePlatformDefaultWidth = false)
                 ) {
                     LoginDialog(
-                        onDismissRequest = {
+                        onCompletedLogin = {
                             showLoginDialog = false
                             isOptionsDialogOpen = false
+                        },
+                        onDismissRequest = {
+                            showLoginDialog = false
                         }
                     )
                 }
@@ -254,7 +344,13 @@ internal fun HomeScreenContent(
                     }
                 ) {
                     LogoutDialog(
-                        onDismissRequest = { showLogoutDialog = false }
+                        onLogoutComplete = {
+                            showLogoutDialog = false
+                            isOptionsDialogOpen = false
+                        },
+                        onDismissRequest = {
+                            showLogoutDialog = false
+                        }
                     )
                 }
             }
@@ -284,7 +380,7 @@ private fun PreviewHomeScreenContent() {
 
         )
 
-    FundASchoolTheme(formFactorState = MutableStateFlow(FormFactor.PORTRAIT)) {
+    FundASchoolTheme {
         Scaffold {
             HomeScreenContent(state, {})
         }

@@ -36,6 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginDialog(
     onDismissRequest: () -> Unit,
+    onCompletedLogin: () -> Unit,
 ) {
     val layoutProperties = LocalLayoutProperty.current
     val coroutineScope = rememberCoroutineScope()
@@ -319,12 +320,14 @@ fun LoginDialog(
                 modifier = Modifier.weight(1f, true)
             )
 
-            TextButton(
-                onClick = onDismissRequest
-            ) {
-                Text(
-                    text = "Cancel"
-                )
+            if(state.state != LoginDialogState.SUCCESS) {
+                TextButton(
+                    onClick = onDismissRequest
+                ) {
+                    Text(
+                        text = "Cancel"
+                    )
+                }
             }
 
             Button(
@@ -349,7 +352,7 @@ fun LoginDialog(
                             }
                         }
                         LoginDialogState.SUCCESS -> {
-                            onDismissRequest()
+                            onCompletedLogin()
                         }
                     }
                 }

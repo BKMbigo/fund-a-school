@@ -99,9 +99,8 @@ fun HomeNewsItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(IntrinsicSize.Max)
                 .background(MaterialTheme.colorScheme.primaryContainer),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -122,13 +121,15 @@ fun HomeNewsItem(
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioLowBouncy,
                         stiffness = Spring.StiffnessVeryLow
-                    )
+                    ),
+                    expandFrom = Alignment.Top
                 ),
                 exit = shrinkVertically(
                     animationSpec = spring(
                         dampingRatio = Spring.DampingRatioNoBouncy,
                         stiffness = Spring.StiffnessLow
-                    )
+                    ),
+                    shrinkTowards = Alignment.Top
                 )
             ) {
                 Column(
@@ -142,31 +143,33 @@ fun HomeNewsItem(
                         overflow = TextOverflow.Ellipsis,
                     )
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier.weight(1f, true)
-                        )
+                    if(news.associatedProject != null) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier.weight(1f, true)
+                            )
 
-                        Button(
-                            onClick = {
-                                news.associatedProject?.let { onOpenProject(it) }
-                            },
-                            content = {
-                                Icon(
-                                    imageVector = Icons.Default.OpenInNew,
-                                    contentDescription = null
-                                )
+                            Button(
+                                onClick = {
+                                    onOpenProject(news.associatedProject)
+                                },
+                                content = {
+                                    Icon(
+                                        imageVector = Icons.Default.OpenInNew,
+                                        contentDescription = null
+                                    )
 
-                                Spacer(modifier = Modifier.width(4.dp))
+                                    Spacer(modifier = Modifier.width(4.dp))
 
-                                Text(
-                                    text = "Open Project"
-                                )
-                            }
-                        )
+                                    Text(
+                                        text = "Open Project"
+                                    )
+                                }
+                            )
+                        }
                     }
                 }
             }

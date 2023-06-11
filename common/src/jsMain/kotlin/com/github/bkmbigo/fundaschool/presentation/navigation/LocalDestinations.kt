@@ -1,12 +1,14 @@
 package com.github.bkmbigo.fundaschool.presentation.navigation
 
 enum class LocalDestinations(val route: String) {
-    HOME("home"),
+    HOME("/"),
 
-    DONATIONS("donations"),
-    PROJECTS("projects"),
-    ABOUT_US("aboutus"),
+    DONATIONS("/donations"),
+    PROJECTS("/projects"),
+    ABOUT_US("/about_us"),
 
-    NEWS("news"),
-    PROJECT("project")
+    ADMIN("/admin"),
+
+    NEWS("/news"),
+    PROJECT("/project")
 }

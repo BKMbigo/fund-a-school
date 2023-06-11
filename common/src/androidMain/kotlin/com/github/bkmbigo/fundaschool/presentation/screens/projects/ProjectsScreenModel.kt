@@ -4,8 +4,6 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
 import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.domain.repositories.firebase.ProjectRepository
-import com.github.bkmbigo.fundaschool.presentation.screen.projects.ProjectsFilter
-import com.github.bkmbigo.fundaschool.presentation.screen.projects.ProjectsScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

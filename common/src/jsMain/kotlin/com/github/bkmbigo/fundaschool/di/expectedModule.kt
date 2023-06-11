@@ -3,6 +3,8 @@ package com.github.bkmbigo.fundaschool.di
 import dev.gitlive.firebase.*
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.firestore
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.js.Js
 import org.koin.dsl.module
 
 actual val expectedModule = module {
@@ -15,4 +17,5 @@ actual val expectedModule = module {
     single { Firebase.auth(firebaseApp) }
     single { Firebase.firestore(firebaseApp) }
 
+    single { HttpClient(Js) }
 }

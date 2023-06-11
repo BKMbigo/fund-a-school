@@ -9,7 +9,7 @@ data class PaymentsDTO(
     val created_at: String,
     val amount_money: MoneyDTO,
     val status: PaymentStatus,
-    val buyer_email_address: String,
-    val customerId: String,
-    val reference_id: String
+    val buyer_email_address: String? = null,
+    val customerId: String? = null,
+    val reference_id: String? = null
 )

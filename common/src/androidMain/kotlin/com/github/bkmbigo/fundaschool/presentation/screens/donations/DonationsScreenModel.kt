@@ -7,7 +7,6 @@ import com.github.bkmbigo.fundaschool.domain.repositories.firebase.DonationRepos
 import com.github.bkmbigo.fundaschool.domain.repositories.firebase.ProjectRepository
 import com.github.bkmbigo.fundaschool.domain.repositories.firebase.UserRepository
 import com.github.bkmbigo.fundaschool.presentation.components.donations.DonationListItem
-import com.github.bkmbigo.fundaschool.presentation.screen.donations.DonationsScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch

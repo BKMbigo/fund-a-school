@@ -17,7 +17,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LogoutDialog(
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    onLogoutComplete: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val layoutPresenter = LocalLayoutProperty.current
@@ -57,6 +58,7 @@ fun LogoutDialog(
                 onClick = {
                     coroutineScope.launch {
                         presenter.logoutUser()
+                        onLogoutComplete()
                     }
                 }
             ) {

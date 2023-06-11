@@ -1,27 +1,34 @@
 package com.github.bkmbigo.fundaschool.android
 
-import android.app.Activity
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import cafe.adriel.voyager.navigator.LocalNavigator
+import androidx.compose.ui.text.style.TextAlign
 import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
-import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screens.project.ProjectScreen
+import com.github.bkmbigo.fundaschool.di.withKoin
+import com.github.bkmbigo.fundaschool.domain.repositories.square.SubscriptionCadence
+import com.github.bkmbigo.fundaschool.domain.repositories.square.SubscriptionsRepository
+import com.github.bkmbigo.fundaschool.presentation.screens.home.HomeScreen
 import com.github.bkmbigo.fundaschool.presentation.theme.FundASchoolTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.datetime.LocalDate
-import sqip.CardEntry
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,47 +39,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FundASchoolTheme {
-                FakeScreen(project = Project(
-                    id = "wqwq",
-                    name = "Namsawas",
-                    description = "Scasaasnasnvbdjbvjkbvdvjksdvsdjvndfnvkld",
-                    featured = true,
-                    schools = "Likaisksal asaasa",
-                    startDate = 15233,
-                    completionDate = 1588,
-                    targetAmount = 45_000.0f,
-                    currentAmount = 0.0f,
-                    donors = 0,
-                    mediaUrl = ""
-                ), onAction = {
-
-                }
-
-                )
+                Navigator(HomeScreen())
             }
-        }
-    }
-}
-
-
-@Composable
-fun FakeScreen(
-    project: Project,
-    onAction: (HomeScreenAction) -> Unit
-) {
-    val context = LocalContext.current
-
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Button(
-            onClick = {
-                CardEntry.startCardEntryActivity(context as Activity)
-            }
-        ) {
-            Text(
-                text = "Pay"
-            )
         }
     }
 }

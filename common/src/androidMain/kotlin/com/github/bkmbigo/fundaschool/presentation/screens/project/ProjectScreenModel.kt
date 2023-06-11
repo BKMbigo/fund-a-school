@@ -2,11 +2,13 @@ package com.github.bkmbigo.fundaschool.presentation.screens.project
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import com.github.bkmbigo.fundaschool.data.persistence.PersistenceKey
+import com.github.bkmbigo.fundaschool.data.persistence.settings
 import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.domain.repositories.firebase.AuthRepository
 import com.github.bkmbigo.fundaschool.domain.repositories.firebase.ProjectRepository
 import com.github.bkmbigo.fundaschool.domain.repositories.firebase.UserRepository
-import com.github.bkmbigo.fundaschool.presentation.screen.project.ProjectScreenState
+import com.russhwolf.settings.set
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -23,9 +25,10 @@ class ProjectScreenModel(
 ) : ScreenModel {
     private val isNew = project == null
 
+
     private val _state = MutableStateFlow(
         ProjectScreenState(
-            project ?: DefaultProject,
+            project ?: Project.EmptyProject,
             isEditing = project?.let{ false } ?: true
         )
     )
@@ -35,8 +38,9 @@ class ProjectScreenModel(
         getDefaultIsAdmin()
     }
 
-    fun onCardNonceReceived() {
-
+    fun onDonateToProject(amount: Float) {
+        settings[PersistenceKey.pendingDonationTitle] = project?.name ?: ""
+        settings[PersistenceKey.pendingDonationAmount] = amount
     }
 
     fun toggleIsEditing() {
@@ -72,26 +76,4 @@ class ProjectScreenModel(
         }
     }
 
-
-    companion object {
-        private val todayDate = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date.toEpochDays()
-        // Find a more efficient solution to getting default completion date
-        private val defaultCompletionDate = Clock.System.now()
-            .toLocalDateTime(TimeZone.currentSystemDefault()).date.let { LocalDate.fromEpochDays(it.toEpochDays() + 28) }.toEpochDays()
-
-
-        private val DefaultProject = Project(
-            id = "",
-            name = "",
-            description = "",
-            featured = false,
-            schools = "",
-            startDate = todayDate,
-            completionDate = defaultCompletionDate,
-            targetAmount = 0.0f,
-            currentAmount = 0.0f,
-            donors = 0,
-            mediaUrl = ""
-        )
-    }
 }

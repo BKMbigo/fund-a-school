@@ -4,6 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MoneyDTO(
-    val amount: Float,
-    val currency: String = "USD"
-)
+    val amount: Int,
+    val currency: String
+) {
+    fun toUnwrap() = (amount /100).toFloat()
+    companion object {
+        fun wrapMoney(amount: Float?) = if(amount!=null) MoneyDTO((amount * 100).toInt(), "USD") else MoneyDTO(0, "USD")
+    }
+}

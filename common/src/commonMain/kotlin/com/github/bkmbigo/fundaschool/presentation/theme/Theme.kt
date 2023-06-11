@@ -10,22 +10,20 @@ import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalL
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.generateDefaultLayoutProperties
 import com.github.bkmbigo.fundaschool.presentation.theme.typography.TypographyItem
 import com.github.bkmbigo.fundaschool.presentation.theme.typography.generateDefaultTypography
-import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
+import com.github.bkmbigo.fundaschool.utils.LogInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun FundASchoolTheme(
-    formFactorState: StateFlow<FormFactor> = MutableStateFlow(FormFactor.Default),
+    screenWidth: Int = 0,
     isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val materialDefaults = TypographyItem.getMaterialDefaults()
 
-    var exoFamily = remember<FontFamily?> { null }
-    var robotoSans = remember<FontFamily?> { null }
-
-    val formFactor by formFactorState.collectAsState()
+    var exoFamily by remember { mutableStateOf<FontFamily?>(null) }
+    var robotoSans by remember { mutableStateOf<FontFamily?>(null) }
 
     var typographyItem by remember { mutableStateOf(materialDefaults) }
     var layoutProperties by remember { mutableStateOf(DefaultLocalProperties) }
@@ -34,11 +32,12 @@ fun FundASchoolTheme(
         // Make calls asynchronously
         exoFamily = generateExoFontFamily()
         robotoSans = generateRobotoSansFontFamily()
+
     }
 
-    LaunchedEffect(exoFamily, robotoSans, formFactor) {
+    LaunchedEffect(exoFamily, robotoSans, screenWidth) {
         val newTypographyItem = generateDefaultTypography(exoFamily ?: FontFamily.Serif, robotoSans ?: FontFamily.SansSerif)
-        layoutProperties = generateDefaultLayoutProperties(formFactor, exoFamily ?: FontFamily.Serif, robotoSans ?: FontFamily.SansSerif)
+        layoutProperties = generateDefaultLayoutProperties(screenWidth, exoFamily ?: FontFamily.Serif, robotoSans ?: FontFamily.SansSerif)
         typographyItem = newTypographyItem
     }
 

@@ -22,7 +22,7 @@ private suspend fun <T : DocumentData> external.firebase.firestore.CollectionRef
     external.firebase.firestore.addDoc(this, data).await()
 
 private suspend fun <T : DocumentData> external.firebase.firestore.CollectionReference<T>.doc(path: String): external.firebase.firestore.DocumentReference<T> =
-    external.firebase.firestore.doc(this, path).await()
+    external.firebase.firestore.doc(this, path)
 
 private suspend fun <T : DocumentData> external.firebase.firestore.DocumentReference<T>.getDoc() = external.firebase.firestore.getDoc(this).await()
 private suspend fun <T : DocumentData> external.firebase.firestore.DocumentReference<T>.doc(path: String): external.firebase.firestore.DocumentReference<T> =

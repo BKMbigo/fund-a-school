@@ -19,7 +19,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.DialogScreen
@@ -30,13 +29,12 @@ import com.github.bkmbigo.fundaschool.presentation.components.dialog.login.Logou
 import com.github.bkmbigo.fundaschool.presentation.components.list.HorizontalScrollableList
 import com.github.bkmbigo.fundaschool.presentation.components.news.HomeNewsItem
 import com.github.bkmbigo.fundaschool.presentation.components.project.ProjectItem
-import com.github.bkmbigo.fundaschool.presentation.components.topbar.LargeTopBar
-import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenState
+import com.github.bkmbigo.fundaschool.presentation.components.topbar.AdaptiveHomeTopBar
+import com.github.bkmbigo.fundaschool.presentation.components.topbar.AdaptiveHomeTopBarAction
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 
 @Composable
-fun LargeHomeScreen(
+internal fun LargeHomeScreen(
     state: HomeScreenState,
     onAction: (HomeScreenAction) -> Unit
 ) {
@@ -53,167 +51,226 @@ fun LargeHomeScreen(
 
 
     DialogScreen(
-        isDialogOpen = showActionsDialog || showLoginDialog || showLogoutDialog,
+        isDialogOpen = showActionsDialog,
+        onDismissRequest = {
+            showActionsDialog = false
+            showLogoutDialog = false
+        },
         dialogContent = {
-            if(showActionsDialog) {
-                HomeActionDialog(
-                    onAction = { action ->
-                        when (action) {
-                            HomeActionDialogAction.NavigateToAboutUs -> {
-                                onAction(HomeScreenAction.NavigateToAboutUs)
-                            }
-
-                            HomeActionDialogAction.NavigateToAdmin -> {
-                                onAction(HomeScreenAction.NavigateToAdmin)
-                            }
-
-                            HomeActionDialogAction.NavigateToDonation -> {
-                                onAction(HomeScreenAction.NavigateToDonations)
-                            }
-
-                            HomeActionDialogAction.NavigateToHome -> { /*TODO*/
-                            }
-
-                            HomeActionDialogAction.NavigateToProjects -> {
-                                onAction(HomeScreenAction.NavigateToProjects)
-                            }
-
-                            HomeActionDialogAction.EditProfile -> {}
-                            HomeActionDialogAction.Login -> {
-                                showLoginDialog = true
-                            }
-
-                            HomeActionDialogAction.Logout -> {
-                                showLogoutDialog = true
-                            }
+            HomeActionDialog(
+                onAction = { action ->
+                    when (action) {
+                        HomeActionDialogAction.NavigateToAboutUs -> {
+                            onAction(HomeScreenAction.NavigateToAboutUs)
                         }
-                    },
-                    onDismissRequest = { showActionsDialog = false }
-                )
-            }
 
-            if (showLoginDialog) {
+                        HomeActionDialogAction.NavigateToAdmin -> {
+                            onAction(HomeScreenAction.NavigateToAdmin)
+                        }
+
+                        HomeActionDialogAction.NavigateToDonation -> {
+                            onAction(HomeScreenAction.NavigateToDonations)
+                        }
+
+                        HomeActionDialogAction.NavigateToHome -> { /*TODO*/
+                        }
+
+                        HomeActionDialogAction.NavigateToProjects -> {
+                            onAction(HomeScreenAction.NavigateToProjects)
+                        }
+
+                        HomeActionDialogAction.EditProfile -> {}
+                        HomeActionDialogAction.Login -> {
+                            showLoginDialog = true
+                        }
+
+                        HomeActionDialogAction.Logout -> {
+                            showLogoutDialog = true
+                        }
+                    }
+                },
+                onDismissRequest = { showActionsDialog = false }
+            )
+
+        }
+    ) {
+        DialogScreen(
+            isDialogOpen = showLoginDialog,
+            onDismissRequest = {
+                showLoginDialog = false
+                showActionsDialog = false
+            },
+            modifier = Modifier.fillMaxSize(),
+            dialogContent = {
                 LoginDialog(
                     onDismissRequest = {
+                        showLoginDialog = false
+                    },
+                    onCompletedLogin = {
                         showLoginDialog = false
                         showActionsDialog = false
                     }
                 )
             }
-
-            if (showLogoutDialog) {
-                LogoutDialog(
-                    onDismissRequest = { showLogoutDialog = false }
-                )
-            }
-
-        }
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
         ) {
-            LargeTopBar(
-                onSearch = {
-                    onAction(HomeScreenAction.Search(it))
+            DialogScreen(
+                isDialogOpen = showLogoutDialog,
+                modifier = Modifier.fillMaxSize(),
+                onDismissRequest = {
+                    showLogoutDialog = false
                 },
-                onOpenDialog = {
-                    showActionsDialog = true
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f, true)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(vertical = 8.dp)
+                dialogContent = {
+                    LogoutDialog(
+                        onDismissRequest = {
+                            showLogoutDialog = false
+                        },
+                        onLogoutComplete = {
+                            showActionsDialog = false
+                            showLogoutDialog = false
+                        }
+                    )
+                }
             ) {
-                item {
-                    AnimatedVisibility(
-                        visible = state.bookmarks.isNotEmpty(),
-                    ) {
-                        Text(
-                            text = "Bookmarks",
-                            style = layoutProperties.TextStyle.sectionTitle,
-                            modifier = Modifier.padding(sectionTitlePadding)
-                        )
-                    }
-                }
-                item {
-                    AnimatedVisibility(
-                        visible = state.bookmarks.isNotEmpty(),
-                    ) {
-                        /*TODO: Add Bookmark Item*/
-                    }
-                }
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    AdaptiveHomeTopBar(
+                        modifier = Modifier.fillMaxWidth(),
+                        onAction = { action ->
+                            when (action) {
+                                AdaptiveHomeTopBarAction.NavigateToAboutUsScreen -> {
+                                    onAction(HomeScreenAction.NavigateToAboutUs)
+                                }
 
-                item {
-                    AnimatedVisibility(
-                        visible = state.news.isNotEmpty()
-                    ) {
-                        Text(
-                            text = "News",
-                            style = layoutProperties.TextStyle.sectionTitle,
-                            modifier = Modifier.padding(sectionTitlePadding)
-                        )
-                    }
-                }
+                                AdaptiveHomeTopBarAction.NavigateToAdminScreen -> {
+                                    onAction(HomeScreenAction.NavigateToAdmin)
+                                }
 
-                item {
-                    AnimatedVisibility(
-                        visible = state.news.isNotEmpty()
+                                AdaptiveHomeTopBarAction.NavigateToDonationsScreen -> {
+                                    onAction(HomeScreenAction.NavigateToDonations)
+                                }
+
+                                AdaptiveHomeTopBarAction.NavigateToProjectsScreen -> {
+                                    onAction(HomeScreenAction.NavigateToProjects)
+                                }
+
+                                AdaptiveHomeTopBarAction.OpenActionsDialog -> {
+                                    showActionsDialog = true
+                                }
+
+                                is AdaptiveHomeTopBarAction.Search -> {
+                                    onAction(HomeScreenAction.Search(action.searchText))
+                                }
+                            }
+                        }
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f, true)
+                            .fillMaxWidth(),
+                        contentPadding = PaddingValues(vertical = 8.dp)
                     ) {
-                        LazyRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 4.dp, vertical = 4.dp),
-                            contentPadding = PaddingValues(horizontal = 8.dp)
-                        ) {
-                            items(state.news) { newsItem ->
-                                HomeNewsItem(
-                                    news = newsItem,
-                                    size = DpSize(Dp.Infinity, 200.dp),
-                                    modifier = Modifier.fillMaxWidth()
-                                        .padding(vertical = 4.dp, horizontal = 4.dp),
-                                    contentScale = ContentScale.Crop,
-                                    onOpenProject = { onAction(HomeScreenAction.NavigateToProject(it)) },
-                                    onOpenNews = { onAction(HomeScreenAction.NavigateToNews(it)) }
+                        item {
+                            AnimatedVisibility(
+                                visible = state.bookmarks.isNotEmpty(),
+                            ) {
+                                Text(
+                                    text = "Bookmarks",
+                                    style = layoutProperties.TextStyle.sectionTitle,
+                                    modifier = Modifier.padding(sectionTitlePadding)
                                 )
                             }
                         }
-                    }
-                }
+                        item {
+                            AnimatedVisibility(
+                                visible = state.bookmarks.isNotEmpty(),
+                            ) {
+                                /*TODO: Add Bookmark Item*/
+                            }
+                        }
 
-                item {
-                    AnimatedVisibility(
-                        visible = state.featuredProjects.isNotEmpty()
-                    ) {
-                        Text(
-                            text = "Featured Projects",
-                            style = layoutProperties.TextStyle.sectionTitle,
-                            modifier = Modifier.padding(sectionTitlePadding)
-                        )
-                    }
-                }
+                        item {
+                            AnimatedVisibility(
+                                visible = state.news.isNotEmpty()
+                            ) {
+                                Text(
+                                    text = "News",
+                                    style = layoutProperties.TextStyle.sectionTitle,
+                                    modifier = Modifier.padding(sectionTitlePadding)
+                                )
+                            }
+                        }
 
-                item {
-                    HorizontalScrollableList(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                        contentPadding = PaddingValues(horizontal = 4.dp)
-                    ) {
-                        items(state.featuredProjects) { projectItem ->
-                            ProjectItem.FeaturedProject(
-                                project = projectItem,
-                                size = DpSize(250.dp, 350.dp),
-                                modifier = Modifier,
-                                isProjectBookmarked = false,
-                                onProjectBookmarked = {},
-                                onProjectOpened = {
-                                    onAction(HomeScreenAction.NavigateToProject(projectItem))
+                        item {
+                            AnimatedVisibility(
+                                visible = state.news.isNotEmpty()
+                            ) {
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 4.dp, vertical = 4.dp),
+                                    contentPadding = PaddingValues(horizontal = 8.dp)
+                                ) {
+                                    items(state.news) { newsItem ->
+                                        HomeNewsItem(
+                                            news = newsItem,
+                                            size = DpSize(300.dp, 200.dp),
+                                            modifier = Modifier.fillMaxWidth()
+                                                .padding(vertical = 4.dp, horizontal = 4.dp),
+                                            contentScale = ContentScale.Crop,
+                                            onOpenProject = {
+                                                onAction(
+                                                    HomeScreenAction.NavigateToProject(
+                                                        it
+                                                    )
+                                                )
+                                            },
+                                            onOpenNews = {
+                                                onAction(
+                                                    HomeScreenAction.NavigateToNews(
+                                                        it
+                                                    )
+                                                )
+                                            }
+                                        )
+                                    }
                                 }
-                            )
+                            }
+                        }
+
+                        item {
+                            AnimatedVisibility(
+                                visible = state.featuredProjects.isNotEmpty()
+                            ) {
+                                Text(
+                                    text = "Featured Projects",
+                                    style = layoutProperties.TextStyle.sectionTitle,
+                                    modifier = Modifier.padding(sectionTitlePadding)
+                                )
+                            }
+                        }
+
+                        item {
+                            HorizontalScrollableList(
+                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                contentPadding = PaddingValues(horizontal = 4.dp)
+                            ) {
+                                items(state.featuredProjects) { projectItem ->
+                                    ProjectItem.FeaturedProject(
+                                        project = projectItem,
+                                        size = DpSize(250.dp, 350.dp),
+                                        modifier = Modifier,
+                                        isProjectBookmarked = false,
+                                        onProjectBookmarked = {},
+                                        onProjectOpened = {
+                                            onAction(HomeScreenAction.NavigateToProject(projectItem))
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }

@@ -1,5 +1,9 @@
 package com.github.bkmbigo.fundaschool.data.square.utils
 
+import com.github.bkmbigo.fundaschool.data.square.models.SquareError
+import com.github.bkmbigo.fundaschool.domain.repositories.square.SquareResponse
+import com.github.bkmbigo.squareinappkotlin.data.network.dto.payments.ErrorCategory
+import com.github.bkmbigo.squareinappkotlin.data.network.dto.payments.ErrorCode
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ServerResponseException
@@ -37,6 +41,14 @@ suspend fun <T : Any> safeApiCall(apiCall: suspend () -> T): NetworkResult<T> {
             errorCode = 0,
             errorMessage = e.message ?: "An unknown error occurred"
         )
+    }
+}
+
+suspend fun <T> wrapSquareResponse(apicall: suspend ()-> NetworkResult<T>): SquareResponse<T> {
+    val apiResponse = apicall.invoke()
+    return when (apiResponse) {
+        is NetworkResult.Error -> SquareResponse.Error<T>(listOf(SquareError(ErrorCategory.API_ERROR, ErrorCode.INTERNAL_SERVER_ERROR)))
+        is NetworkResult.Success -> SquareResponse.Success<T>(apiResponse.data)
     }
 }
 

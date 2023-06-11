@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PaymentResponseDTO(
-    val errors: List<SquareError>?,
-    val payment: PaymentsDTO?
+    val errors: List<SquareError>? = emptyList(),
+    val payment: PaymentsDTO? = null
 )

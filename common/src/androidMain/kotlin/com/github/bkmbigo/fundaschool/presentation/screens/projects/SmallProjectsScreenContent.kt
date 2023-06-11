@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.Filter
 import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -25,8 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.projectfilter.ProjectsFilterDialog
 import com.github.bkmbigo.fundaschool.presentation.components.project.ProjectItem
-import com.github.bkmbigo.fundaschool.presentation.screen.projects.ProjectsScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.projects.ProjectsScreenState
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 
 @Composable

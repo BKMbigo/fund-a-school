@@ -4,16 +4,19 @@
     "EXPOSED_PARAMETER_TYPE",
 )
 
-import androidx.compose.runtime.*
-import androidx.compose.ui.unit.DpSize
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.ComposeWindow
 import com.github.bkmbigo.fundaschool.presentation.theme.FundASchoolTheme
-import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.jetbrains.skiko.CanvasRenderer
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLStyleElement
 import org.w3c.dom.HTMLTitleElement
@@ -26,7 +29,7 @@ private const val CANVAS_ELEMENT_ID = "ComposeTarget" // Hardwired into ComposeW
 @Suppress("FunctionName")
 fun BrowserViewportWindow(
     title: String = "Untitled",
-    content: @Composable ComposeWindow.(StateFlow<FormFactor>) -> Unit
+    content: @Composable ComposeWindow.(Int) -> Unit
 ) {
     val htmlHeadElement = document.head!!
     htmlHeadElement.appendChild(
@@ -50,33 +53,51 @@ fun BrowserViewportWindow(
     )
 
     fun HTMLCanvasElement.fillViewportSize() {
+        console.log("Window Inner Width is: ${window.innerWidth}")
+        console.log("Window Inner Height is: ${window.innerHeight}")
+
         setAttribute("width", "${window.innerWidth}")
         setAttribute("height", "${window.innerHeight}")
     }
 
-    val canvas = (document.getElementById(CANVAS_ELEMENT_ID) as HTMLCanvasElement).apply {
+    fun getHtmlCanvas() = (document.getElementById(CANVAS_ELEMENT_ID) as HTMLCanvasElement).apply {
         fillViewportSize()
     }
 
-    ComposeWindow().apply {
-        val _formFactorState = MutableStateFlow(FormFactor.SMALL)
+    getHtmlCanvas()
 
-        fun ComposeWindow.setNewCanvasSize() {
+    ComposeWindow().apply {
+        window.addEventListener("resize", {
             val scale = layer.layer.contentScale
             val density = window.devicePixelRatio.toFloat()
+            val canvas = getHtmlCanvas()
+
+            console.log("Scale is $scale")
+            console.log("Density is $density")
+
             canvas.fillViewportSize()
-            layer.layer.attachTo(canvas)
+
+            //layer.layer.attachTo(canvas)
+            canvas.style.width = "${canvas.width}px"
+            canvas.style.height = "${canvas.height}px"
+            layer.layer.state = object : CanvasRenderer(canvas) {
+                override fun drawFrame(currentTimestamp: Double) {
+                    // currentTimestamp is in milliseconds.
+                    val currentNanos = currentTimestamp * 1_000_000
+                    layer.layer.skikoView?.onRender(
+                        layer.layer.state?.canvas!!,
+                        canvas.width,
+                        canvas.height,
+                        currentNanos.toLong()
+                    )
+                }
+            }.apply { initCanvas(canvas.width, canvas.height, scale, layer.layer.pixelGeometry) }
+
             layer.layer.needRedraw()
-            val width = (canvas.width / scale * density).toInt()
-            val height = (canvas.height / scale * density).toInt()
-            layer.setSize(width, height)
-
-            _formFactorState.value = if(width < 1024) FormFactor.SMALL else FormFactor.LARGE
-
-
-        }
-        window.addEventListener("resize", {
-            setNewCanvasSize()
+            layer.setSize(
+                (canvas.width / scale * density).toInt(),
+                (canvas.height / scale * density).toInt()
+            )
         })
 
         // WORKAROUND: ComposeWindow does not implement `setTitle(title)`
@@ -87,13 +108,18 @@ fun BrowserViewportWindow(
         htmlTitleElement.textContent = title
 
         setContent {
-            FundASchoolTheme(
-                formFactorState = _formFactorState
-            ) {
-                content(_formFactorState.asStateFlow())
-            }
-        }
+            var screenWidth =
+                (window.innerWidth / layer.layer.contentScale * window.devicePixelRatio.toFloat()).toInt()
 
-        setNewCanvasSize()
+            LaunchedEffect(Unit) {
+                window.addEventListener("resize", {
+//                    setNewCanvasSize()
+                    screenWidth =
+                        (window.innerWidth / layer.layer.contentScale * window.devicePixelRatio.toFloat()).toInt()
+                })
+            }
+
+            content(screenWidth)
+        }
     }
 }

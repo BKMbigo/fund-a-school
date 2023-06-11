@@ -1,6 +1,13 @@
 package com.github.bkmbigo.fundaschool.presentation.screens.news
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -8,7 +15,13 @@ import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,8 +34,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.presentation.components.news.MediaImageView
-import com.github.bkmbigo.fundaschool.presentation.screen.news.NewsScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.news.NewsScreenState
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
@@ -50,39 +61,42 @@ fun SmallNewsScreen(
         inputs = arrayOf(state.news.text)
     ) { mutableStateOf(TextFieldValue(state.news.text)) }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
-                IconButton(
-                    onClick = { onAction(NewsScreenAction.NavigateUp) },
-                    modifier = Modifier.padding(vertical = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ChevronLeft,
-                        contentDescription = null
-                    )
-                }
 
-                Box(
-                    modifier = Modifier.weight(1f, true)
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
+            IconButton(
+                onClick = { onAction(NewsScreenAction.NavigateUp) },
+                modifier = Modifier.padding(vertical = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ChevronLeft,
+                    contentDescription = null
                 )
             }
+
+            Box(
+                modifier = Modifier.weight(1f, true)
+            )
         }
 
-        item {
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
-            ) {
+        LazyColumn(
+            modifier = Modifier
+                .weight(1f, true)
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
+            item {
                 if (!state.isEditing) {
                     Text(
                         text = state.news.title,
-                        modifier = Modifier.align(Alignment.CenterHorizontally).padding(vertical = 4.dp),
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                            .padding(vertical = 4.dp),
                         style = layoutProperties.TextStyle.pageTitle
                     )
                 } else {
@@ -96,7 +110,9 @@ fun SmallNewsScreen(
                         shape = RoundedCornerShape(12.dp)
                     )
                 }
+            }
 
+            item {
                 if (!state.isEditing) {
                     Text(
                         text = state.news.caption,
@@ -114,9 +130,11 @@ fun SmallNewsScreen(
                         shape = RoundedCornerShape(12.dp)
                     )
                 }
-
+            }
+            item {
                 Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp))
-
+            }
+            item {
                 if (state.isAdmin) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -168,9 +186,12 @@ fun SmallNewsScreen(
                         }
                     }
                 }
-
+            }
+            item {
                 Divider(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp))
+            }
 
+            item {
                 if (state.news.mediaUrl.isNotBlank()) {
                     MediaImageView(
                         mediaUrl = state.news.mediaUrl,
@@ -180,6 +201,8 @@ fun SmallNewsScreen(
                             .clip(RoundedCornerShape(12.dp)),
                     )
                 }
+            }
+            item {
 
                 if (!state.isEditing) {
                     Text(
@@ -201,6 +224,4 @@ fun SmallNewsScreen(
             }
         }
     }
-
-
 }

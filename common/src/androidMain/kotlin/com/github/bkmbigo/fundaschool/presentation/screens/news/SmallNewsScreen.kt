@@ -17,8 +17,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.presentation.components.news.MediaImageView
-import com.github.bkmbigo.fundaschool.presentation.screen.news.NewsScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.news.NewsScreenState
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone

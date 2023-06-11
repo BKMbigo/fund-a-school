@@ -12,7 +12,7 @@ external class Firestore {
 external fun getFirestore(app: external.firebase.app.FirebaseApp): Firestore
 external fun collection(firestore: Firestore, path: String): CollectionReference<DocumentData>
 external fun <T: DocumentData> addDoc(reference: CollectionReference<T>, data: Any): Promise<DocumentReference<T>>
-external fun <T: DocumentData> doc(reference: CollectionReference<T>, path: String): Promise<DocumentReference<T>>
+external fun <T: DocumentData> doc(reference: CollectionReference<T>, path: String): DocumentReference<T>
 external fun <T: DocumentData> deleteDoc(reference: DocumentReference<T>): Promise<Unit>
 external fun <T: DocumentData> getDoc(reference: DocumentReference<T>): Promise<DocumentSnapshot<T>>
 external fun <T: DocumentData> doc(reference: DocumentReference<T>, path: String): Promise<DocumentReference<T>>

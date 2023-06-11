@@ -1,20 +1,14 @@
 package com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.presentation.theme.DefaultTypography
-import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
+import com.github.bkmbigo.fundaschool.presentation.utils.Platform
 
-val LocalLayoutProperty = staticCompositionLocalOf<LayoutProperties> { DefaultLocalProperties }
+val LocalLayoutProperty = staticCompositionLocalOf<LayoutProperties> { DefaultLocalProperties } // Consider migrating to compositionLocalOf()
 
 val DefaultLocalProperties = object : LayoutProperties {
     override val TextStyle = object : LayoutProperties.TextStyleProperties {
@@ -33,5 +27,6 @@ val DefaultLocalProperties = object : LayoutProperties {
         override val dialogAction: TextStyle = DefaultTypography.bodyMedium
         override val textLayoutHelper: TextStyle = DefaultTypography.bodySmall.copy(fontWeight = FontWeight.Bold)
     }
-    override val formFactor = FormFactor.Default
+    override val platform = Platform.WEB
+    override val screenWidth: Int = 0
 }

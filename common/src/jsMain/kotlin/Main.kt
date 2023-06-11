@@ -1,10 +1,9 @@
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,62 +12,126 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.di.FirebaseConfig
+import app.softwork.routingcompose.BrowserRouter
+import app.softwork.routingcompose.Router
+import app.softwork.routingcompose.navigate
 import com.github.bkmbigo.fundaschool.di.commonModule
 import com.github.bkmbigo.fundaschool.di.expectedModule
 import com.github.bkmbigo.fundaschool.di.withKoin
-import com.github.bkmbigo.fundaschool.presentation.navigation.MainNavigation
-import com.github.bkmbigo.fundaschool.presentation.screen.home.HomeScreenAction
+import com.github.bkmbigo.fundaschool.domain.models.firebase.News
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.NewsRepository
+import com.github.bkmbigo.fundaschool.presentation.navigation.LocalDestinations
+import com.github.bkmbigo.fundaschool.presentation.screens.admin.AdminScreen
+import com.github.bkmbigo.fundaschool.presentation.screens.admin.AdminScreenAction
+import com.github.bkmbigo.fundaschool.presentation.screens.admin.AdminScreenPresenter
+import com.github.bkmbigo.fundaschool.presentation.screens.admin.SmallAdminScreenContent
 import com.github.bkmbigo.fundaschool.presentation.screens.home.HomeScreen
+import com.github.bkmbigo.fundaschool.presentation.screens.home.HomeScreenAction
 import com.github.bkmbigo.fundaschool.presentation.screens.home.HomeScreenPresenter
-import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
-import dev.gitlive.firebase.FirebaseUser
-import dev.gitlive.firebase.toJson
+import com.github.bkmbigo.fundaschool.presentation.screens.news.NewsScreen
+import com.github.bkmbigo.fundaschool.presentation.screens.news.NewsScreenAction
+import com.github.bkmbigo.fundaschool.presentation.screens.news.NewsScreenPresenter
+import com.github.bkmbigo.fundaschool.presentation.screens.news.SmallNewsScreen
+import com.github.bkmbigo.fundaschool.presentation.screens.project.ProjectScreen
+import com.github.bkmbigo.fundaschool.presentation.screens.projects.ProjectsScreen
+import com.github.bkmbigo.fundaschool.presentation.theme.FundASchoolTheme
+import kotlinx.browser.window
 import org.jetbrains.skiko.wasm.onWasmReady
 import org.koin.core.context.startKoin
 
 fun main() {
+    startKoin {
+        modules(commonModule)
+        modules(expectedModule)
+    }
+
     onWasmReady {
-        startKoin {
-            modules(commonModule)
-            modules(expectedModule)
-        }
+        BrowserViewportWindow("Fund A School") { screenWidth ->
+            BrowserRouter(initPath = LocalDestinations.HOME.route) {
+                route(LocalDestinations.HOME.route) {
+                    val router = Router.current
 
-        BrowserViewportWindow("Fund A School") {
-            val coroutineScope = rememberCoroutineScope()
-            val presenter = remember { HomeScreenPresenter(withKoin(), withKoin(), withKoin(), withKoin(), coroutineScope) }
+                    FundASchoolTheme(
+                        screenWidth = screenWidth
+                    ) {
+                        HomeScreen(router = router)
+                    }
+                }
 
-            val state by presenter.state.collectAsState()
+                route(LocalDestinations.ADMIN.route) {
+                    val router = Router.current
 
-            HomeScreen(
-                state = state,
-                onAction = { action ->
-                    when(action) {
-                        HomeScreenAction.NavigateToAboutUs -> {
+                    FundASchoolTheme(
+                        screenWidth = screenWidth
+                    ) {
+                        AdminScreen(router = router)
+                    }
 
-                        }
-                        HomeScreenAction.NavigateToAdmin -> {
+                }
 
-                        }
-                        HomeScreenAction.NavigateToDonations -> {
+                route(LocalDestinations.ABOUT_US.route) {
 
-                        }
-                        is HomeScreenAction.NavigateToNews -> {
+                }
 
-                        }
-                        is HomeScreenAction.NavigateToProject -> {
+                route(LocalDestinations.DONATIONS.route) {
 
-                        }
-                        HomeScreenAction.NavigateToProjects -> {
+                }
 
-                        }
-                        is HomeScreenAction.Search -> {
+                route(LocalDestinations.PROJECTS.route) {
+                    val router = Router.current
 
+                    FundASchoolTheme(
+                        screenWidth = screenWidth
+                    ) {
+                        ProjectsScreen(
+                            router = router
+                        )
+                    }
+                }
+
+                route(LocalDestinations.NEWS.route) {
+                    val router = Router.current
+                    val newsId = remember { parameters?.map?.get("newsId")?.toString() }
+
+                    FundASchoolTheme(
+                        screenWidth = screenWidth
+                    ) {
+                        NewsScreen(
+                            newsId = newsId,
+                            router = router
+                        )
+                    }
+                }
+
+
+                route(LocalDestinations.PROJECT.route) {
+                    val router = Router.current
+                    val projectId = parameters?.map?.get("projectId").toString()
+
+                    FundASchoolTheme(
+                        screenWidth = screenWidth
+                    ) {
+                        ProjectScreen(
+                            projectId = projectId,
+                            router = router
+                        )
+                    }
+
+                }
+
+                noMatch {
+                    FundASchoolTheme(
+                        screenWidth = screenWidth
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Text(
+                                text = "No Matching Page!!!",
+                                modifier = Modifier.align(Alignment.Center)
+                            )
                         }
                     }
                 }
-            )
+            }
         }
     }
 }

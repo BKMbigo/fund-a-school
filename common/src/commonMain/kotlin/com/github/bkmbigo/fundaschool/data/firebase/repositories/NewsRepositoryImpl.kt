@@ -52,8 +52,8 @@ class NewsRepositoryImpl(
     }
 
     override suspend fun getNews(newsId: String): News? =
-        collectionReference.document(newsId).get().data<NewsItem>({ this.decodeNewsItem() })
-            ?.generateNews()
+        collectionReference.document(newsId).get().data<NewsItem>({ this.decodeNewsItem() })?.generateNews()
+
 
     override suspend fun getAllNews(): List<News> =
         collectionReference.get().documents.map {

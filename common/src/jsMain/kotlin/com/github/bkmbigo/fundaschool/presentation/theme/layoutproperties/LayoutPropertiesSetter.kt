@@ -3,11 +3,12 @@ package com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.sp
-import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
+import com.github.bkmbigo.fundaschool.presentation.utils.Platform
 
 actual fun generateDefaultLayoutProperties(
-    formFactor: FormFactor,
+    screenWidth: Int,
     exoFontFamily: FontFamily,
     robotoSansFontFamily: FontFamily
 ): LayoutProperties = object : LayoutProperties {
@@ -15,80 +16,53 @@ actual fun generateDefaultLayoutProperties(
     val applicationTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 24.sp
-            FormFactor.LARGE -> 28.sp
-        }
+        fontSize = 26.sp
     )
 
     val actionTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 22.sp
-            FormFactor.LARGE -> 24.sp
-        }
+        fontSize =  19.sp
     )
 
     val pageTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 26.sp
-            FormFactor.LARGE -> 26.sp
-        }
+        fontSize =  26.sp
     )
 
     val pageSubTextStyle = TextStyle(
         fontFamily = exoFontFamily,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 14.sp
-            FormFactor.LARGE -> 18.sp
-        }
+        fontSize =  18.sp
     )
 
     val sectionTitleTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 18.sp
-            FormFactor.LARGE -> 20.sp
-        }
+        fontSize =  20.sp
     )
 
     val informationTitleTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 16.sp
-            FormFactor.LARGE -> 18.sp
-        }
+        fontSize = 18.sp
     )
 
     val informationTextStyle = TextStyle(
         fontFamily = robotoSansFontFamily,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 12.sp
-            FormFactor.LARGE -> 13.sp
-        }
+        fontSize = 13.sp
     )
 
     val informationEmphasisText = informationTextStyle.copy(fontWeight = FontWeight.SemiBold)
     val textLayoutHelperTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 12.sp
-            FormFactor.LARGE -> 13.sp
-        }
+        fontSize =  13.sp
     )
 
     val bodyTextStyle = TextStyle(
         fontFamily = robotoSansFontFamily,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 10.sp
-            FormFactor.LARGE -> 10.sp
-        }
+        fontSize = 12.sp
     )
 
     val bodyEmphasisText = bodyTextStyle.copy(
@@ -98,20 +72,14 @@ actual fun generateDefaultLayoutProperties(
 
     val footerTextStyle = TextStyle(
         fontFamily = robotoSansFontFamily,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 10.sp
-            FormFactor.LARGE -> 10.sp
-        }
+        fontSize = 10.sp
     )
 
-    val dialogTitleText = sectionTitleTextStyle.copy(fontWeight = FontWeight.SemiBold)
+    val dialogTitleText = sectionTitleTextStyle.copy(fontWeight = FontWeight.Bold)
     val dialogActionText = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize = when (formFactor) {
-            FormFactor.SMALL -> 18.sp
-            FormFactor.LARGE -> 20.sp
-        }
+        fontSize = 18.sp
     )
 
     override val TextStyle = object : LayoutProperties.TextStyleProperties {
@@ -131,6 +99,6 @@ actual fun generateDefaultLayoutProperties(
         override val textLayoutHelper: TextStyle = textLayoutHelperTextStyle
 
     }
-    override val formFactor: FormFactor = formFactor
-
+    override val screenWidth: Int = screenWidth
+    override val platform: Platform = Platform.WEB
 }

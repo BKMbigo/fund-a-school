@@ -7,7 +7,6 @@ import com.github.bkmbigo.fundaschool.domain.repositories.firebase.AuthRepositor
 import com.github.bkmbigo.fundaschool.domain.repositories.firebase.NewsRepository
 import com.github.bkmbigo.fundaschool.domain.repositories.firebase.UserRepository
 import com.github.bkmbigo.fundaschool.domain.utils.NewsCategory
-import com.github.bkmbigo.fundaschool.presentation.screen.news.NewsScreenState
 import com.github.bkmbigo.fundaschool.utils.LogInfo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

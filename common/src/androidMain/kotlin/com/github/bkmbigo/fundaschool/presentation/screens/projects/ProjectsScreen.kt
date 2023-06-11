@@ -3,23 +3,19 @@ package com.github.bkmbigo.fundaschool.presentation.screens.projects
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import cafe.adriel.voyager.core.model.rememberScreenModel
+import androidx.compose.runtime.remember
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.github.bkmbigo.fundaschool.di.withKoin
-import com.github.bkmbigo.fundaschool.presentation.screen.MainScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.projects.ProjectsScreenAction
 import com.github.bkmbigo.fundaschool.presentation.screens.project.ProjectScreen
-import kotlinx.coroutines.flow.StateFlow
 
-class ProjectsScreen(
-    private val onMainAction: (MainScreenAction) -> Unit
-) : Screen {
+class ProjectsScreen : Screen {
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = rememberScreenModel { ProjectsScreenModel(withKoin()) }
+
+        val screenModel = remember { ProjectsScreenModel(withKoin()) }
 
         val state by screenModel.state.collectAsState()
 
@@ -40,7 +36,7 @@ class ProjectsScreen(
                     }
 
                     is ProjectsScreenAction.NavigateToProject -> {
-                        navigator.push(ProjectScreen(action.project, onMainAction = onMainAction))
+                        navigator.push(ProjectScreen(action.project))
                     }
 
                     ProjectsScreenAction.NavigateUp -> {
@@ -50,4 +46,5 @@ class ProjectsScreen(
             }
         )
     }
+
 }

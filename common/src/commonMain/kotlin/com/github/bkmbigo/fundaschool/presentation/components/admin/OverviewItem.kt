@@ -33,7 +33,7 @@ fun OverviewItem(
         Text(
             text = title,
             style = layoutProperties.TextStyle.informationTitle,
-            modifier = Modifier.align(Alignment.CenterHorizontally).padding(horizontal = 4.dp)
+            modifier = Modifier.align(Alignment.CenterHorizontally).padding(horizontal = 8.dp)
         )
 
         Spacer(modifier = Modifier.height(4.dp))

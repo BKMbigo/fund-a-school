@@ -21,8 +21,6 @@ import com.github.bkmbigo.fundaschool.presentation.components.admin.OverviewItem
 import com.github.bkmbigo.fundaschool.presentation.components.list.HorizontalPagerList
 import com.github.bkmbigo.fundaschool.presentation.components.news.HomeNewsItem
 import com.github.bkmbigo.fundaschool.presentation.components.section.SectionHeader
-import com.github.bkmbigo.fundaschool.presentation.screen.admin.AdminScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.admin.AdminScreenState
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 
 @OptIn(ExperimentalFoundationApi::class)

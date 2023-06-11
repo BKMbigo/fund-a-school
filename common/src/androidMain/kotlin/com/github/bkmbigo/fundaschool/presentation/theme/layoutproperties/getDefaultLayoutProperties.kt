@@ -3,11 +3,12 @@ package com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.sp
-import com.github.bkmbigo.fundaschool.presentation.utils.FormFactor
+import com.github.bkmbigo.fundaschool.presentation.utils.Platform
 
 actual fun generateDefaultLayoutProperties(
-    formFactor: FormFactor,
+    screenWidth: Int,
     exoFontFamily: FontFamily,
     robotoSansFontFamily: FontFamily
 ): LayoutProperties = object : LayoutProperties {
@@ -15,62 +16,41 @@ actual fun generateDefaultLayoutProperties(
     val applicationTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 24.sp
-            FormFactor.LANDSCAPE -> 24.sp
-        }
+        fontSize = 24.sp
     )
 
     val actionTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 22.sp
-            FormFactor.LANDSCAPE -> 24.sp
-        }
+        fontSize = 22.sp
     )
 
     val pageTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 20.sp
-            FormFactor.LANDSCAPE -> 24.sp
-        }
+        fontSize = 20.sp
     )
 
     val pageSubTextStyle = TextStyle(
         fontFamily = exoFontFamily,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 14.sp
-            FormFactor.LANDSCAPE -> 18.sp
-        }
+        fontSize = 14.sp
     )
 
     val sectionTitleTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.Bold,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 16.sp
-            FormFactor.LANDSCAPE -> 22.sp
-        }
+        fontSize = 16.sp
     )
 
     val informationTitleTextStyle = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 14.sp
-            FormFactor.LANDSCAPE -> 16.sp
-        }
+        fontSize =  14.sp
     )
 
     val informationTextStyle = TextStyle(
         fontFamily = robotoSansFontFamily,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 11.sp
-            FormFactor.LANDSCAPE -> 13.sp
-        }
+        fontSize = 11.sp
     )
 
     val informationEmphasisText = informationTextStyle.copy(fontWeight = FontWeight.SemiBold)
@@ -84,10 +64,7 @@ actual fun generateDefaultLayoutProperties(
 
     val bodyTextStyle = TextStyle(
         fontFamily = robotoSansFontFamily,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 10.sp
-            FormFactor.LANDSCAPE -> 10.sp
-        }
+        fontSize = 11.sp
     )
 
 
@@ -98,20 +75,14 @@ actual fun generateDefaultLayoutProperties(
 
     val footerTextStyle = TextStyle(
         fontFamily = exoFontFamily,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 10.sp
-            FormFactor.LANDSCAPE -> 10.sp
-        }
+        fontSize = 10.sp
     )
 
     val dialogTitleText = sectionTitleTextStyle.copy(fontWeight = FontWeight.SemiBold)
     val dialogActionText = TextStyle(
         fontFamily = exoFontFamily,
         fontWeight = FontWeight.SemiBold,
-        fontSize = when (formFactor) {
-            FormFactor.PORTRAIT -> 16.sp
-            FormFactor.LANDSCAPE -> 16.sp
-        }
+        fontSize = 16.sp
     )
 
     override val TextStyle = object : LayoutProperties.TextStyleProperties {
@@ -130,9 +101,6 @@ actual fun generateDefaultLayoutProperties(
         override val dialogAction: TextStyle = dialogActionText
         override val textLayoutHelper: TextStyle = textLayoutHelperTextStyle
     }
-
-
-    override val formFactor: FormFactor = formFactor
-
-
+    override val screenWidth: Int = screenWidth
+    override val platform: Platform = Platform.ANDROID
 }

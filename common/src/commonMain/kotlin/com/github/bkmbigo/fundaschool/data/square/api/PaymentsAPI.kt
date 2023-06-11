@@ -18,17 +18,17 @@ class PaymentsAPI(
      * Create a Purchase
      */
     suspend fun createPayment(createPaymentDTO: CreatePaymentDTO): HttpResponse {
-        return client.post("${ApiEndpoints.HOST_URL}${ApiEndpoints.PAYMENTS}") {
+        return client.post("${ApiEndpoints.HOST_URL}v2/payments") {
+            attachHeaders()
             contentType(ContentType.Application.Json)
             setBody(createPaymentDTO)
-            attachHeaders()
         }
     }
 
     suspend fun listPayments(
         last_4: String? = null,
         card_brand: String? = null
-    ) = client.get("${ApiEndpoints.HOST_URL}${ApiEndpoints.PAYMENTS}") {
+    ) = client.get("${ApiEndpoints.HOST_URL}v2/payments") {
         url {
             last_4?.let { it1 -> parameters.append("last_4", it1) }
             card_brand?.let { it1 -> parameters.append("card_brand", it1) }

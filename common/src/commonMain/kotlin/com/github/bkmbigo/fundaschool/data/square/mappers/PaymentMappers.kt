@@ -12,7 +12,7 @@ fun Payment.toCreatePaymentDTO(
 ) = CreatePaymentDTO(
     source_id = sourceId,
     idempotency_key = generateUUID(),
-    amount_money = MoneyDTO(amount = amount * 100,),
+    amount_money = MoneyDTO(amount = (amount * 100).toInt(), currency = "USD"),
     customer_id = customerId,
     reference_id = referenceId,
     buyer_email_address = emailAddress
@@ -21,8 +21,8 @@ fun Payment.toCreatePaymentDTO(
 fun PaymentsDTO.toPayment() = Payment(
     id = id,
     createdAt = Instant.parse(created_at),
-    amount = amount_money.amount / 100,
-    customerId = customerId,
-    referenceId = reference_id,
-    emailAddress = buyer_email_address
+    amount = (amount_money.amount / 100).toFloat(),
+    customerId = customerId ?: "",
+    referenceId = reference_id?: "",
+    emailAddress = buyer_email_address?: ""
 )

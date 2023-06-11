@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import com.github.bkmbigo.fundaschool.presentation.utils.applyCustomSize
+import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,7 +101,7 @@ internal fun featuredProject(
                 )
 
                 Text(
-                    text = project.startDate.toString(),
+                    text = LocalDate.fromEpochDays(project.startDate).toString(),
                     textAlign = TextAlign.End,
                     style = layoutProperties.TextStyle.informationText
                 )
@@ -122,7 +123,7 @@ internal fun featuredProject(
                 )
 
                 Text(
-                    text = project.completionDate.toString(),
+                    text = LocalDate.fromEpochDays(project.completionDate).toString(),
                     textAlign = TextAlign.End,
                     style = layoutProperties.TextStyle.informationText
                 )

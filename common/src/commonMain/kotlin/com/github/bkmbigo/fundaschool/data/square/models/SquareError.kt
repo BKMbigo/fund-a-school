@@ -8,6 +8,6 @@ import kotlinx.serialization.Serializable
 data class SquareError(
     val category: ErrorCategory,
     val code: ErrorCode,
-    val detail: String?,
-    val field: String?
+    val detail: String? = null,
+    val field: String? = null
 )

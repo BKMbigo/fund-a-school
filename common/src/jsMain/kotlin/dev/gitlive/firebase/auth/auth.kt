@@ -18,7 +18,7 @@ actual fun Firebase.auth(app: FirebaseApp) =
 
 actual class AuthResult internal constructor(val js: external.firebase.auth.UserCredential) {
     actual val user: FirebaseUser?
-        get() = rethrow { js.user?.let { FirebaseUser(it) } }
+        get() = rethrow { FirebaseUser(js.user) }
 }
 
 //actual class AuthTokenResult(val js: firebase.auth.IdTokenResult) {
@@ -73,10 +73,13 @@ private fun errorToException(cause: dynamic) = when(val code = cause.code?.toStr
     "auth/invalid-user-token" -> FirebaseAuthInvalidUserException(code, cause)
     "auth/requires-recent-login" -> FirebaseAuthRecentLoginRequiredException(code, cause)
     "auth/user-disabled" -> FirebaseAuthInvalidUserException(code, cause)
+    "auth/user-not-found" -> FirebaseAuthInvalidUserException(code, cause)
     "auth/user-token-expired" -> FirebaseAuthInvalidUserException(code, cause)
     "auth/web-storage-unsupported" -> FirebaseAuthWebException(code, cause)
     "auth/network-request-failed" -> FirebaseNetworkException(code, cause)
     "auth/invalid-credential",
+    "auth/wrong-password",
+    "auth/invalid-email",
     "auth/invalid-verification-code",
     "auth/missing-verification-code",
     "auth/invalid-verification-id",

@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.domain.models.firebase.Project
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
+import kotlinx.datetime.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,8 +35,7 @@ internal fun ProjectListItem(
             isProjectBookmarked,
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f, true)
-                .padding(4.dp),
+                .weight(1f, true),
             onBookmarkChanged = onBookmarkChanged
         )
 
@@ -99,7 +99,7 @@ internal fun ProjectListItem(
                         )
                     }
                     Text(
-                        text = project.startDate.toString(),
+                        text = LocalDate.fromEpochDays(project.startDate).toString(),
                         modifier = Modifier.weight(1f, true),
                         style = layoutProperties.TextStyle.informationText,
                         maxLines = 1,
@@ -132,7 +132,7 @@ internal fun ProjectListItem(
                             )
                         }
                         Text(
-                            text = project.startDate.toString(),
+                            text = LocalDate.fromEpochDays(project.completionDate).toString(),
                             style = layoutProperties.TextStyle.informationText,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis

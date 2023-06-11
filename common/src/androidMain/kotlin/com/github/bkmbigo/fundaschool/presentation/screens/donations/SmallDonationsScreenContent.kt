@@ -15,13 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.presentation.components.donations.DonationList
-import com.github.bkmbigo.fundaschool.presentation.screen.admin.AdminScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.donations.DonationsScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.donations.DonationsScreenState
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 
 @Composable

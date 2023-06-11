@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.googleServices)
+    alias(libs.plugins.ksp)
 }
 
 repositories {
@@ -48,6 +49,9 @@ kotlin {
 
                 implementation(libs.koin.core)
                 implementation(libs.koin.compose)
+
+                implementation(libs.multiplatform.settings)
+                implementation(libs.multiplatform.settings.no.arg)
             }
         }
         val commonTest by getting {}
@@ -72,26 +76,22 @@ kotlin {
                 implementation(libs.compose.ui.graphics)
                 implementation(libs.compose.animation)
 
-                api(libs.square.card)
-
                 implementation(libs.ktor.client.android)
 
                 implementation(libs.koin.android)
+                implementation(libs.koin.androidx.compose)
 
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.transitions)
 
                 implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
                 implementation(libs.firebase.auth.ktx)
-                //implementation(libs.firebase.common)
                 implementation(libs.firebase.firestore.ktx)
             }
         }
         val jsMain by getting {
             dependencies {
                 implementation(compose.html.core)
-
-                //implementation(libs.gitlive.auth)
 
                 implementation(libs.routing.compose)
                 implementation(libs.ktor.client.js)

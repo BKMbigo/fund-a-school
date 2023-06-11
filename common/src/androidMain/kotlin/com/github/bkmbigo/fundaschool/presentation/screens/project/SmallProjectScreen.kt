@@ -14,21 +14,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.github.bkmbigo.fundaschool.presentation.components.list.HorizontalScrollableList
+import androidx.compose.ui.window.Dialog
+import com.github.bkmbigo.fundaschool.presentation.components.dialog.amountpicker.AmountPickerDialog
 import com.github.bkmbigo.fundaschool.presentation.components.news.MediaImageView
 import com.github.bkmbigo.fundaschool.presentation.components.project.ProjectInformationCard
-import com.github.bkmbigo.fundaschool.presentation.screen.project.ProjectScreenAction
-import com.github.bkmbigo.fundaschool.presentation.screen.project.ProjectScreenState
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -43,6 +42,8 @@ fun SmallProjectScreen(
     var titleText by rememberSaveable(stateSaver = TextFieldValue.Saver, inputs = arrayOf(state.project)) { mutableStateOf(TextFieldValue(state.project.name)) }
     var textText by rememberSaveable(stateSaver = TextFieldValue.Saver, inputs = arrayOf(state.project)) { mutableStateOf(TextFieldValue(state.project.name)) }
     var targetAmountText by rememberSaveable(stateSaver = TextFieldValue.Saver, inputs = arrayOf(state.project)) { mutableStateOf(TextFieldValue(state.project.targetAmount.toString())) }
+
+    var showEnterAmountDialog by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -257,7 +258,7 @@ fun SmallProjectScreen(
                     .fillMaxWidth()
             ) {
                 Button(
-                    onClick = { onAction(ProjectScreenAction.DonateToProject) }
+                    onClick = { showEnterAmountDialog = true }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Money,
@@ -271,7 +272,6 @@ fun SmallProjectScreen(
                     )
                 }
             }
-
 
 
             Divider(modifier = Modifier
@@ -292,9 +292,21 @@ fun SmallProjectScreen(
                 style = layoutProperties.TextStyle.sectionTitle
             )
 
-            /*TODO: Add Associated Project*/
+        }
+    }
 
 
+    if(showEnterAmountDialog) {
+        Dialog(
+            onDismissRequest = { showEnterAmountDialog = false }
+        ) {
+            AmountPickerDialog(
+                onDismissRequest = { showEnterAmountDialog = false },
+                onAmountPicked = {
+                    showEnterAmountDialog = false
+                    onAction(ProjectScreenAction.DonateToProject(it))
+                }
+            )
         }
     }
 }

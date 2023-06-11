@@ -10,18 +10,19 @@ import com.github.bkmbigo.fundaschool.data.square.utils.generateUUID
 import com.github.bkmbigo.fundaschool.data.square.utils.safeApiCall
 import com.github.bkmbigo.fundaschool.data.square.utils.toElement
 import com.github.bkmbigo.fundaschool.domain.models.square.Payment
-import com.github.bkmbigo.fundaschool.domain.repositories.square.PaymentsRepository
+import com.github.bkmbigo.fundaschool.domain.repositories.square.PaymentRepository
 import com.github.bkmbigo.fundaschool.domain.repositories.square.SquareResponse
+import com.github.bkmbigo.fundaschool.utils.LogInfo
 import com.github.bkmbigo.squareinappkotlin.data.network.dto.payments.ErrorCategory
 import com.github.bkmbigo.squareinappkotlin.data.network.dto.payments.ErrorCode
 import io.ktor.client.call.body
 
 class PaymentRepositoryImpl(
     private val paymentsApi: PaymentsAPI
-): PaymentsRepository {
+): PaymentRepository {
     override suspend fun createPayment(
         sourceId: String,
-        amount: Long,
+        amount: Float?,
         customerId: String,
         referenceId: String,
         emailAddress: String
@@ -30,14 +31,14 @@ class PaymentRepositoryImpl(
             CreatePaymentDTO(
                 source_id = sourceId,
                 idempotency_key = generateUUID(),
-                amount_money = MoneyDTO(
-                    amount = amount * 100f
-                ),
+                amount_money = MoneyDTO.wrapMoney(amount),
                 customer_id = customerId,
                 reference_id = referenceId,
                 buyer_email_address = emailAddress
             )
         ).body<PaymentResponseDTO>()
+
+        LogInfo("Response is ${response}")
 
         if (response.payment != null) {
             SquareResponse.Success<Payment>(response.payment.toPayment())

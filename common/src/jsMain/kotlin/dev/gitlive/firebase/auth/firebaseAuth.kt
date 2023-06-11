@@ -45,7 +45,11 @@ actual class FirebaseAuth internal constructor(val js: external.firebase.auth.Au
 //    actual fun isSignInWithEmailLink(link: String) = rethrow { js.isSignInWithEmailLink(link) }
 
     actual suspend fun signInWithEmailAndPassword(email: String, password: String) =
-        rethrow { AuthResult(external.firebase.auth.signInWithEmailAndPassword(js, email, password).await()) }
+        rethrow {
+            val response = AuthResult(external.firebase.auth.signInWithEmailAndPassword(js, email, password).await())
+            console.log("Auth Response is $response")
+            response
+        }
 
 //    actual suspend fun signInWithCustomToken(token: String) =
 //        rethrow { AuthResult(js.signInWithCustomToken(token).await()) }

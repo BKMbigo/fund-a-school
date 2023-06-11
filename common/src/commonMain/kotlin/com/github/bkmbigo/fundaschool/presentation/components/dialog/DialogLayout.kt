@@ -29,9 +29,8 @@ fun DialogLayout(
             .widthIn(min = 300.dp)
             .width(IntrinsicSize.Min)
             .height(IntrinsicSize.Max)
-            .padding(horizontal = 24.dp, vertical = 32.dp)
             .clip(RoundedCornerShape(16.dp))
-            .shadow(8.dp, RoundedCornerShape(16.dp))
+            .shadow(16.dp, RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
     ) {
         Row(
