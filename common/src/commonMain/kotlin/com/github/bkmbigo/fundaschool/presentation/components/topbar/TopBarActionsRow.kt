@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.MeasureResult
 import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.unit.Constraints
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
+import com.github.bkmbigo.fundaschool.utils.LogInfo
 
 // Hopefully animations will be added later :)
 /**
@@ -128,15 +129,14 @@ internal fun TopBarActionsRow(
                     if (showDonation) {
                         donationButtonPlaceable.placeRelative(
                             x = constraints.maxWidth - donationButtonPlaceable.width -
-                                    if(showProject) projectsButtonPlaceable.width else 0 -
+                                    (if(showProject) projectsButtonPlaceable.width else 0) -
                                     if(showAdmin) adminButtonPlaceable.width else 0,
                             0
                         )
                     }
                     if (showProject) {
                         projectsButtonPlaceable.placeRelative(
-                            x = constraints.maxWidth -
-                                    projectsButtonPlaceable.width -
+                            x = constraints.maxWidth - projectsButtonPlaceable.width -
                                     if(showAdmin) adminButtonPlaceable.width else 0,
                             0
                         )
