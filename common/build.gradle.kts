@@ -39,6 +39,8 @@ kotlin {
                 implementation(compose.animation)
                 implementation(compose.material3)
                 implementation(compose.materialIconsExtended)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
 
                 implementation(libs.image.loader)
 
@@ -108,6 +110,9 @@ android {
     namespace = "com.github.bkmbigo.fundaschool"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    sourceSets["main"].res.srcDirs("src/androidMain/res")
+    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+
     defaultConfig {
         minSdkVersion(24)
         targetSdkVersion(33)
