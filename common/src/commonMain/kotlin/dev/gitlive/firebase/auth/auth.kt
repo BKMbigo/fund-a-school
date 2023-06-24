@@ -19,14 +19,14 @@ expect class AuthResult {
     val user: FirebaseUser?
 }
 
-//expect class AuthTokenResult {
+expect class AuthTokenResult {
 //    val authTimestamp: Long
-//    val claims: Map<String, Any>
+    val claims: Map<String, Any>
 //    val expirationTimestamp: Long
 //    val issuedAtTimestamp: Long
-//    val signInProvider: String?
-//    val token: String?
-//}
+    val signInProvider: String?
+    val token: String?
+}
 
 //sealed class ActionCodeResult {
 //    object SignInWithEmailLink : ActionCodeResult()

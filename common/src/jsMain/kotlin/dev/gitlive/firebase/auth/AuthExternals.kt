@@ -4,6 +4,7 @@
 package external.firebase.auth
 
 import external.firebase.app.FirebaseApp
+import kotlin.js.Json
 import kotlin.js.Promise
 
 external fun getAuth(app: FirebaseApp): Auth
@@ -49,10 +50,22 @@ external fun sendPasswordResetEmail(
     actionCodeSettings: ActionCodeSettings
 ): Promise<Unit>
 
+external fun sendPasswordResetEmail(
+    auth: Auth,
+    email: String,
+    actionCodeSettings: Any?
+): Promise<Unit>
+
 external fun sendSignInLinkToEmail(
     auth: Auth,
     email: String,
     actionCodeSettings: ActionCodeSettings
+): Promise<Unit>
+
+external fun sendSignInLinkToEmail(
+    auth: Auth,
+    email: String,
+    actionCodeSettings: Any
 ): Promise<Unit>
 
 external fun setPersistence(auth: Auth, persistence: Persistence): Promise<Unit>
@@ -372,7 +385,7 @@ external class GoogleAuthProvider : BaseOAuthProvider {
 
 external interface IdTokenResult {
     val authTime: String
-    val claims: ParsedToken
+    val claims: Json
     val expirationTime: String
     val issuedAtTime: String
     val signInProvider: String?
@@ -430,8 +443,12 @@ external interface OAuthCredentialOptions {
     val rawNonce: String?
 }
 
-external class OAuthProvider : BaseOAuthProvider {
+external class OAuthProvider(providerId: String): BaseOAuthProvider {
     fun credential(params: OAuthCredentialOptions): OAuthCredential
+
+    fun credential(optionsOrIdToken: Any?, accessToken: String?): AuthCredential
+    fun addScope(scope: String)
+    fun setCustomParameters(customOAuthParameters: Map<String, String>)
 
     companion object {
         //        fun credentialFromError(error: FirebaseError): OAuthCredential?

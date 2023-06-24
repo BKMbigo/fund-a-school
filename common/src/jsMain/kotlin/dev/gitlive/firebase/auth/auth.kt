@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlin.js.json
 
 //actual val Firebase.auth
-//    get() = rethrow { dev.gitlive.firebase.common.auth; FirebaseAuth(firebase.auth()) }
+//    get() = rethrow { FirebaseAuth(external.firebase.auth.i) }
 
 actual fun Firebase.auth(app: FirebaseApp) =
     rethrow { FirebaseAuth(external.firebase.auth.initializeAuth(app.js)) }
@@ -21,22 +21,22 @@ actual class AuthResult internal constructor(val js: external.firebase.auth.User
         get() = rethrow { FirebaseUser(js.user) }
 }
 
-//actual class AuthTokenResult(val js: firebase.auth.IdTokenResult) {
-////    actual val authTimestamp: Long
-////        get() = js.authTime
-//    actual val claims: Map<String, Any>
-//        get() = (js("Object").keys(js.claims) as Array<String>).mapNotNull {
-//                key -> js.claims[key]?.let { key to it }
-//        }.toMap()
+actual class AuthTokenResult(val js: external.firebase.auth.IdTokenResult) {
+//    actual val authTimestamp: Long
+//        get() = js.authTime
+    actual val claims: Map<String, Any>
+        get() = (js("Object").keys(js.claims) as Array<String>).mapNotNull {
+                key -> js.claims[key]?.let { key to it }
+        }.toMap()
 //    actual val expirationTimestamp: Long
-//        get() = android.expirationTime
+//        get() = js.expirationTime
 //    actual val issuedAtTimestamp: Long
 //        get() = js.issuedAtTime
-//    actual val signInProvider: String?
-//        get() = js.signInProvider
-//    actual val token: String?
-//        get() = js.token
-//}
+    actual val signInProvider: String?
+        get() = js.signInProvider
+    actual val token: String?
+        get() = js.token
+}
 
 internal fun ActionCodeSettings.toJson() = json(
     "url" to url,
