@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,48 +25,54 @@ fun DialogLayout(
 ) {
     val layoutProperties = LocalLayoutProperty.current
 
-    Column(
+
+    Surface(
         modifier = Modifier
             .widthIn(min = 300.dp)
             .width(IntrinsicSize.Min)
             .height(IntrinsicSize.Max)
             .clip(RoundedCornerShape(16.dp))
             .shadow(16.dp, RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp)),
+        color = MaterialTheme.colorScheme.background,
+        shadowElevation = 24.dp,
+        shape = RoundedCornerShape(16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(Modifier)
-
-            Text(
-                text = "Fund A School",
-                style = layoutProperties.TextStyle.dialogTitle,
-            )
-
-            IconButton(
-                onClick = onDismissRequest,
-                modifier = Modifier.align(Alignment.Top)
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.Cancel,
-                    contentDescription = null
+                Box(Modifier)
+
+                Text(
+                    text = "Fund A School",
+                    style = layoutProperties.TextStyle.dialogTitle,
                 )
+
+                IconButton(
+                    onClick = onDismissRequest,
+                    modifier = Modifier.align(Alignment.Top)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Cancel,
+                        contentDescription = null
+                    )
+                }
             }
-        }
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-        ) {
-            content()
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                content()
 
-            Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(4.dp))
+            }
         }
     }
 
