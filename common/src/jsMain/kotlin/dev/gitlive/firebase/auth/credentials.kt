@@ -1,5 +1,6 @@
 package dev.gitlive.firebase
 
+import external.firebase.auth.UserCredential
 import kotlinx.coroutines.await
 import kotlin.js.json
 
@@ -38,6 +39,9 @@ actual object GoogleAuthProvider {
         }
         return AuthCredential(external.firebase.auth.GoogleAuthProvider.credential(idToken, accessToken))
     }
+
+    fun credentialFromResult(userCredential: UserCredential): AuthCredential? =
+        external.firebase.auth.GoogleAuthProvider.credentialFromResult(userCredential)?.let { AuthCredential(it) }
 }
 
 actual class OAuthProvider(val js: external.firebase.auth.OAuthProvider) {
