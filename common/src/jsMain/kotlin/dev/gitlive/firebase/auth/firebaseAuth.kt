@@ -57,8 +57,8 @@ actual class FirebaseAuth internal constructor(val js: external.firebase.auth.Au
 //    actual suspend fun signInAnonymously() =
 //        rethrow { AuthResult(js.signInAnonymously().await()) }
 
-//    actual suspend fun signInWithCredential(authCredential: AuthCredential) =
-//        rethrow { AuthResult(js.signInWithCredential(authCredential.js).await()) }
+    actual suspend fun signInWithCredential(authCredential: AuthCredential) =
+        rethrow { AuthResult(external.firebase.auth.signInWithCredential(js, authCredential.js).await()) }
 //
 //    actual suspend fun signInWithEmailLink(email: String, link: String) =
 //        rethrow { AuthResult(js.signInWithEmailLink(email, link).await()) }

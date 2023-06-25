@@ -55,8 +55,8 @@ actual class FirebaseAuth internal constructor(val android: com.google.firebase.
 //
 //    actual suspend fun signInAnonymously() = AuthResult(android.signInAnonymously().await())
 //
-//    actual suspend fun signInWithCredential(authCredential: AuthCredential) =
-//        AuthResult(android.signInWithCredential(authCredential.android).await())
+    actual suspend fun signInWithCredential(authCredential: AuthCredential) =
+        AuthResult(android.signInWithCredential(authCredential.android).await())
 //
 //    actual suspend fun signInWithEmailLink(email: String, link: String) =
 //        AuthResult(android.signInWithEmailLink(email, link).await())
