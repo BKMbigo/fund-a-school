@@ -37,6 +37,10 @@ class AuthRepositoryImpl(
         response
     }
 
+    override suspend fun signInWithCredential(credential: AuthCredential): AuthResponse =
+        firebase { auth.signInWithCredential(credential) }
+
+
     override fun currentUser(): FirebaseUser? = auth.currentUser
     override suspend fun logout() = auth.signOut()
 }
