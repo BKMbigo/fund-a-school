@@ -316,7 +316,7 @@ external interface ConfirmationResult {
 }
 
 external interface Dependencies {
-    val persistence: List<Persistence>
+    val persistence: Persistence
     val popupRedirectResolver: PopupRedirectResolver?
 }
 
