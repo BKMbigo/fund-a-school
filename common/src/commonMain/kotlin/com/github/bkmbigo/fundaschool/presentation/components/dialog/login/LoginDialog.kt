@@ -5,6 +5,8 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
@@ -31,8 +35,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.orEmpty
+import org.jetbrains.compose.resources.rememberImageBitmap
+import org.jetbrains.compose.resources.resource
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
 fun LoginDialog(
     onDismissRequest: () -> Unit,
@@ -150,8 +158,6 @@ fun LoginDialog(
                     passwordFocusRequester.requestFocus()
                 }
             )
-
-            Spacer(modifier = Modifier.height(4.dp))
         }
 
 
@@ -265,8 +271,40 @@ fun LoginDialog(
         }
 
         if(state.state == LoginDialogState.LOGIN || state.state == LoginDialogState.REGISTRATION) {
+
+            ElevatedButton(
+                onClick = {
+
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(TextFieldDefaults.MinHeight),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.elevatedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                ),
+                elevation = ButtonDefaults.elevatedButtonElevation(
+                    defaultElevation = 8.dp
+                )
+            ) {
+                Image(
+                    painter = BitmapPainter(resource("google_icon.png").rememberImageBitmap().orEmpty()),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .requiredSize(24.dp)
+                )
+                Spacer(modifier = Modifier.width(2.dp))
+                Text(
+                    text = if(state.state == LoginDialogState.LOGIN) "Sign in using Google" else "Sign up using Google"
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = 2.dp)
             ) {
                 Text(
                     text = if (state.state == LoginDialogState.LOGIN) "No Account? " else "Have an account? ",
@@ -281,6 +319,8 @@ fun LoginDialog(
                     modifier = Modifier.clickable { presenter.changeState() }
                 )
             }
+
+
         }
 
         Spacer(modifier = Modifier.height(8.dp))
