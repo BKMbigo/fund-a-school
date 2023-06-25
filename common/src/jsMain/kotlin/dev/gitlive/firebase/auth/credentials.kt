@@ -4,6 +4,8 @@ import external.firebase.auth.UserCredential
 import kotlinx.coroutines.await
 import kotlin.js.json
 
+abstract class AuthProvider(open val js: external.firebase.auth.AuthProvider)
+
 actual open class AuthCredential(val js: external.firebase.auth.AuthCredential) {
     actual val providerId: String
         get() = js.providerId
@@ -12,7 +14,7 @@ actual open class AuthCredential(val js: external.firebase.auth.AuthCredential) 
 actual class PhoneAuthCredential(js: external.firebase.auth.AuthCredential) : AuthCredential(js)
 actual class OAuthCredential(js: external.firebase.auth.AuthCredential) : AuthCredential(js)
 
-actual object EmailAuthProvider {
+actual object EmailAuthProvider: AuthProvider(external.firebase.auth.EmailAuthProvider()) {
     actual fun credential(email: String, password: String): AuthCredential =
         AuthCredential(external.firebase.auth.EmailAuthProvider.credential(email, password))
 
@@ -22,17 +24,17 @@ actual object EmailAuthProvider {
     ): AuthCredential = AuthCredential(external.firebase.auth.EmailAuthProvider.credentialWithLink(email, emailLink))
 }
 
-actual object FacebookAuthProvider {
+actual object FacebookAuthProvider: AuthProvider(external.firebase.auth.FacebookAuthProvider()) {
     actual fun credential(accessToken: String): AuthCredential =
         AuthCredential(external.firebase.auth.FacebookAuthProvider.credential(accessToken))
 }
 
-actual object GithubAuthProvider {
+actual object GithubAuthProvider: AuthProvider(external.firebase.auth.GithubAuthProvider()) {
     actual fun credential(token: String): AuthCredential =
         AuthCredential(external.firebase.auth.GithubAuthProvider.credential(token))
 }
 
-actual object GoogleAuthProvider {
+actual object GoogleAuthProvider: AuthProvider(external.firebase.auth.GoogleAuthProvider()) {
     actual fun credential(idToken: String?, accessToken: String?): AuthCredential {
         require(idToken != null || accessToken != null) {
             "Both parameters are optional but at least one must be present."
@@ -44,7 +46,7 @@ actual object GoogleAuthProvider {
         external.firebase.auth.GoogleAuthProvider.credentialFromResult(userCredential)?.let { AuthCredential(it) }
 }
 
-actual class OAuthProvider(val js: external.firebase.auth.OAuthProvider) {
+actual class OAuthProvider(override val js: external.firebase.auth.OAuthProvider): AuthProvider(js) {
 
     actual constructor(
         provider: String,
@@ -73,7 +75,7 @@ actual class OAuthProvider(val js: external.firebase.auth.OAuthProvider) {
     }
 }
 
-actual class PhoneAuthProvider(val js: external.firebase.auth.PhoneAuthProvider) {
+actual class PhoneAuthProvider(override val js: external.firebase.auth.PhoneAuthProvider): AuthProvider(js) {
 
     actual constructor(auth: FirebaseAuth) : this(external.firebase.auth.PhoneAuthProvider(auth.js))
 

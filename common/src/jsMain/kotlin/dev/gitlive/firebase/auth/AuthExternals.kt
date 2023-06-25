@@ -303,7 +303,7 @@ open external class AuthCredential {
 }
 
 external interface AuthProvider {
-    val providerId: String
+    //val providerId: String
 }
 
 external interface AuthSettings {
@@ -328,7 +328,7 @@ external class EmailAuthCredential : AuthCredential {
 
 
 external class EmailAuthProvider : AuthProvider {
-    override val providerId: String = definedExternally
+    val providerId: String = definedExternally
 
     companion object {
         val EMAIL_LINK_SIGN_IN_METHOD: String = definedExternally
@@ -348,7 +348,7 @@ external interface EmulatorConfig {
     val protocol: String
 }
 
-open external class BaseOAuthProvider
+abstract external class BaseOAuthProvider: AuthProvider
 
 external class FacebookAuthProvider : BaseOAuthProvider {
     companion object {
@@ -480,7 +480,7 @@ external class PhoneAuthCredential : AuthCredential {
     }
 }
 
-external class PhoneAuthProvider(auth: Auth) {
+external class PhoneAuthProvider(auth: Auth): AuthProvider {
 
     val providerId: String = definedExternally
     fun verifyPhoneNumber(
