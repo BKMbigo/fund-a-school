@@ -7,7 +7,7 @@ import dev.gitlive.firebase.*
 
 // Made to address issue: https://youtrack.jetbrains.com/issue/KT-48836
 class AuthRepositoryImpl(
-    private val auth: FirebaseAuth
+    override val auth: FirebaseAuth
 ): AuthRepository {
     override suspend fun loginUser(
         email: String,
