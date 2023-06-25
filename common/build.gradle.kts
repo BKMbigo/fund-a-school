@@ -86,6 +86,8 @@ kotlin {
                 implementation(libs.voyager.navigator)
                 implementation(libs.voyager.transitions)
 
+                implementation(libs.gms.play.services.auth)
+
                 implementation(platform("com.google.firebase:firebase-bom:32.1.0"))
                 implementation(libs.firebase.auth.ktx)
                 implementation(libs.firebase.firestore.ktx)
