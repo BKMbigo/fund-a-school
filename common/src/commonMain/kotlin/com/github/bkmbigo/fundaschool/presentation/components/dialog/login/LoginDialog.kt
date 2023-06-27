@@ -29,6 +29,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.github.bkmbigo.fundaschool.di.withKoin
+import com.github.bkmbigo.fundaschool.domain.repositories.firebase.AuthRepository
 import com.github.bkmbigo.fundaschool.presentation.components.dialog.DialogLayout
 import com.github.bkmbigo.fundaschool.presentation.theme.layoutproperties.LocalLayoutProperty
 import kotlinx.coroutines.Job
@@ -51,20 +52,43 @@ fun LoginDialog(
 
     var eventJob: Job? = null
 
-    val presenter = remember { withKoin<LoginPresenter>() }
+    val authRepository = withKoin<AuthRepository>()
+
+    val presenter = remember { LoginPresenter(authRepository) }
+    val loginHelper = rememberLoginHelper(authRepository, onCompletedLogin)
 
     val state by presenter.state.collectAsState()
 
-    var name by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
-    var email by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
-    var password by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
-    var reenterPassword by rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
+    var name by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(
+            TextFieldValue(
+                ""
+            )
+        )
+    }
+    var email by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(
+            TextFieldValue(
+                ""
+            )
+        )
+    }
+    var password by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(
+            TextFieldValue("")
+        )
+    }
+    var reenterPassword by rememberSaveable(stateSaver = TextFieldValue.Saver) {
+        mutableStateOf(
+            TextFieldValue("")
+        )
+    }
 
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
     var isPasswordHidden by remember { mutableStateOf(true) }
 
-    var reenterPasswordError by remember{ mutableStateOf<String?>(null) }
+    var reenterPasswordError by remember { mutableStateOf<String?>(null) }
 
     // Focus Requester
     val nameFocusRequester = remember { FocusRequester() }
@@ -74,12 +98,21 @@ fun LoginDialog(
 
     LaunchedEffect(Unit) {
         launch {
+            loginHelper.retrievedUsername.collect { cred ->
+                if (cred != null) {
+                    val (retrievedUsername, retrievedPassword) = cred
+                    email = TextFieldValue(retrievedUsername)
+                    password = TextFieldValue(retrievedPassword)
+                }
+            }
+        }
+        launch {
             presenter.events.collect { event ->
                 eventJob?.cancel()
                 eventJob = launch {
                     errorMessage = event
                     delay(5000)
-                    if(isActive) {
+                    if (isActive) {
                         errorMessage = null
                     }
                 }
@@ -90,7 +123,7 @@ fun LoginDialog(
     DialogLayout(
         onDismissRequest = onDismissRequest
     ) {
-        if(state.state == LoginDialogState.REGISTRATION) {
+        if (state.state == LoginDialogState.REGISTRATION) {
             Text(
                 text = "Name",
                 style = layoutProperties.TextStyle.textLayoutHelper
@@ -125,7 +158,7 @@ fun LoginDialog(
             )
         }
 
-        if(state.state == LoginDialogState.LOGIN || state.state == LoginDialogState.REGISTRATION) {
+        if (state.state == LoginDialogState.LOGIN || state.state == LoginDialogState.REGISTRATION) {
             Text(
                 text = "Email",
                 style = layoutProperties.TextStyle.textLayoutHelper
@@ -161,7 +194,7 @@ fun LoginDialog(
         }
 
 
-        if(state.state == LoginDialogState.LOGIN || state.state == LoginDialogState.REGISTRATION) {
+        if (state.state == LoginDialogState.LOGIN || state.state == LoginDialogState.REGISTRATION) {
             Text(
                 text = "Password",
                 style = layoutProperties.TextStyle.textLayoutHelper
@@ -213,7 +246,7 @@ fun LoginDialog(
             )
         }
 
-        if(state.state == LoginDialogState.REGISTRATION) {
+        if (state.state == LoginDialogState.REGISTRATION) {
             Text(
                 text = "Reenter Password",
                 style = layoutProperties.TextStyle.textLayoutHelper
@@ -237,7 +270,7 @@ fun LoginDialog(
                         onClick = { isPasswordHidden = !isPasswordHidden }
                     ) {
                         Icon(
-                            imageVector = if(isPasswordHidden) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            imageVector = if (isPasswordHidden) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                             contentDescription = null
                         )
                     }
@@ -247,7 +280,7 @@ fun LoginDialog(
                         text = reenterPasswordError ?: state.passwordError ?: ""
                     )
                 },
-                visualTransformation = if(isPasswordHidden) PasswordVisualTransformation() else VisualTransformation.None,
+                visualTransformation = if (isPasswordHidden) PasswordVisualTransformation() else VisualTransformation.None,
                 isError = state.passwordError != null || reenterPasswordError != null,
                 shape = RoundedCornerShape(16.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -255,7 +288,7 @@ fun LoginDialog(
                 ),
                 keyboardActions = KeyboardActions {
                     coroutineScope.launch {
-                        if(reenterPassword.text == password.text) {
+                        if (reenterPassword.text == password.text) {
                             presenter.registerUser(
                                 name.text,
                                 email.text,
@@ -270,11 +303,13 @@ fun LoginDialog(
 
         }
 
-        if(state.state == LoginDialogState.LOGIN || state.state == LoginDialogState.REGISTRATION) {
+        if (state.state == LoginDialogState.LOGIN || state.state == LoginDialogState.REGISTRATION) {
 
             ElevatedButton(
                 onClick = {
-
+                    coroutineScope.launch {
+                        loginHelper.signInUsingGoogle()
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -289,14 +324,16 @@ fun LoginDialog(
                 )
             ) {
                 Image(
-                    painter = BitmapPainter(resource("google_icon.png").rememberImageBitmap().orEmpty()),
+                    painter = BitmapPainter(
+                        resource("google_icon.png").rememberImageBitmap().orEmpty()
+                    ),
                     contentDescription = null,
                     modifier = Modifier
                         .requiredSize(24.dp)
                 )
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text = if(state.state == LoginDialogState.LOGIN) "Sign in using Google" else "Sign up using Google"
+                    text = if (state.state == LoginDialogState.LOGIN) "Sign in using Google" else "Sign up using Google"
                 )
             }
 
@@ -325,7 +362,7 @@ fun LoginDialog(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if(state.loading) {
+        if (state.loading) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
 
@@ -360,7 +397,7 @@ fun LoginDialog(
                 modifier = Modifier.weight(1f, true)
             )
 
-            if(state.state != LoginDialogState.SUCCESS) {
+            if (state.state != LoginDialogState.SUCCESS) {
                 TextButton(
                     onClick = onDismissRequest
                 ) {
@@ -372,15 +409,16 @@ fun LoginDialog(
 
             Button(
                 onClick = {
-                    when (state.state){
+                    when (state.state) {
                         LoginDialogState.LOGIN -> {
                             coroutineScope.launch {
                                 presenter.loginUser(email.text, password.text)
                             }
                         }
+
                         LoginDialogState.REGISTRATION -> {
                             coroutineScope.launch {
-                                if(reenterPassword.text == password.text) {
+                                if (reenterPassword.text == password.text) {
                                     presenter.registerUser(
                                         name.text,
                                         email.text,
@@ -391,6 +429,7 @@ fun LoginDialog(
                                 }
                             }
                         }
+
                         LoginDialogState.SUCCESS -> {
                             onCompletedLogin()
                         }
@@ -398,7 +437,7 @@ fun LoginDialog(
                 }
             ) {
                 Text(
-                    text = when(state.state){
+                    text = when (state.state) {
                         LoginDialogState.LOGIN -> "Login"
                         LoginDialogState.REGISTRATION -> "Registration"
                         LoginDialogState.SUCCESS -> "Continue"
