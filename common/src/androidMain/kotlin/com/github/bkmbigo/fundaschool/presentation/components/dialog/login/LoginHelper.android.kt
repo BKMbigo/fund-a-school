@@ -13,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import com.github.bkmbigo.fundaschool.domain.repositories.firebase.AuthRepository
-import com.github.bkmbigo.fundaschool.domain.utils.AuthResponse
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SavePasswordRequest
@@ -26,7 +25,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
@@ -37,8 +35,6 @@ internal actual fun rememberLoginHelper(
 ): LoginHelper {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
-    var showOneTap = remember { false }
 
     val retrievedUser = remember { MutableSharedFlow<Pair<String, String>?>() }
 
@@ -56,7 +52,8 @@ internal actual fun rememberLoginHelper(
                     .setSupported(true)
                     .setServerClientId(WEB_CLIENT_ID)
                     .setFilterByAuthorizedAccounts(false)
-                    .build())
+                    .build()
+            )
             .build()
     }
 
@@ -71,16 +68,16 @@ internal actual fun rememberLoginHelper(
             )
             .build()
     }
-    
+
     val savePasswordRequestLauncher = rememberLauncherForActivityResult(
-        contract =  ActivityResultContracts.StartIntentSenderForResult() 
+        contract = ActivityResultContracts.StartIntentSenderForResult()
     ) { result ->
-        if(result.resultCode != Activity.RESULT_OK) {
+        if (result.resultCode != Activity.RESULT_OK) {
             Toast.makeText(
                 context,
                 "Error saving credential",
                 Toast.LENGTH_SHORT
-            )
+            ).show()
         }
     }
 
@@ -97,11 +94,13 @@ internal actual fun rememberLoginHelper(
                 idToken != null -> {
                     coroutineScope.launch {
                         googleSignInState.emit(GoogleSignInState.READY)
-                        Log.i(
-                            "LoginHelper",
-                            "Google Authentication successful"
+                        authRepository.signInWithCredential(
+                            GoogleAuthProvider.credential(
+                                idToken,
+                                null
+                            )
                         )
-                        Toast.makeText(context, "Google Successful", Toast.LENGTH_SHORT).show()
+                        onCompleteLogin()
                     }
                 }
 
@@ -122,11 +121,12 @@ internal actual fun rememberLoginHelper(
             }
         } catch (e: ApiException) {
             //loginViewModel.changeLoading(false)
-            when(e.statusCode){
+            when (e.statusCode) {
                 CommonStatusCodes.CANCELED -> {
                     Toast.makeText(context, "Request Cancelled", Toast.LENGTH_SHORT).show()
                     googleSignInState.tryEmit(GoogleSignInState.ERROR)
                 }
+
                 CommonStatusCodes.NETWORK_ERROR -> {
                     Toast.makeText(
                         context,
@@ -135,6 +135,7 @@ internal actual fun rememberLoginHelper(
                     ).show()
                     googleSignInState.tryEmit(GoogleSignInState.READY)
                 }
+
                 else -> {
                     googleSignInState.tryEmit(GoogleSignInState.READY)
                     Toast.makeText(context, e.localizedMessage, Toast.LENGTH_SHORT).show()
@@ -157,7 +158,7 @@ internal actual fun rememberLoginHelper(
                 e
             )
             Toast.makeText(context, "Error launching Sign In", Toast.LENGTH_SHORT).show()
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             Log.e(
                 "LoginHelper",
                 "Unknown ",
@@ -169,7 +170,8 @@ internal actual fun rememberLoginHelper(
 
     return remember {
         object : LoginHelper {
-            override val retrievedUsername: Flow<Pair<String, String>?> = retrievedUser.asSharedFlow()
+            override val retrievedUsername: Flow<Pair<String, String>?> =
+                retrievedUser.asSharedFlow()
             override val loading: StateFlow<GoogleSignInState> = googleSignInState
 
             override suspend fun signInUsingGoogle() {
@@ -202,7 +204,7 @@ internal actual fun rememberLoginHelper(
                         IntentSenderRequest.Builder(result.pendingIntent)
                             .build()
                     )
-                } catch(e: Exception) {
+                } catch (e: Exception) {
                     Log.e(
                         "LoginHelper",
                         "Error launching save password"

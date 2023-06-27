@@ -18,7 +18,8 @@ internal actual fun rememberLoginHelper(
         override val retrievedUsername: Flow<Pair<String, String>?>
             get() = emptyFlow()
 
-        override val loading: StateFlow<GoogleSignInState> = MutableStateFlow(GoogleSignInState.READY)
+        override val loading: StateFlow<GoogleSignInState> =
+            MutableStateFlow(GoogleSignInState.READY)
 
         override suspend fun signInUsingGoogle() {
             try {

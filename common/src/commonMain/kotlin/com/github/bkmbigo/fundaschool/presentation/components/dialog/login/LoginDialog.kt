@@ -6,7 +6,6 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -359,7 +358,8 @@ fun LoginDialog(
                 }
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text = if (state.state == LoginDialogState.LOGIN) "Sign in using Google" else "Sign up using Google"
+                    text = if (state.state == LoginDialogState.LOGIN) "Sign in using Google" else "Sign up using Google",
+                    style = layoutProperties.TextStyle.textLayoutHelper
                 )
             }
 
