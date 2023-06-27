@@ -23,6 +23,8 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import dev.gitlive.firebase.GoogleAuthProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -44,13 +46,13 @@ internal actual fun rememberLoginHelper(
 
     val googleSignInRequest = remember {
         BeginSignInRequest.builder()
-            .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
-                .setSupported(true)
-                .build())
+//            .setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
+//                .setSupported(true)
+//                .build())
             .setGoogleIdTokenRequestOptions(
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
-                    .setServerClientId("777829989729-avf86v2b7198kbl21h0bnqa8vvk7vgt8.apps.googleusercontent.com")
+                    .setServerClientId(WEB_CLIENT_ID)
                     .setFilterByAuthorizedAccounts(false)
                     .build())
             .build()
@@ -162,6 +164,7 @@ internal actual fun rememberLoginHelper(
     return remember {
         object : LoginHelper {
             override val retrievedUsername: Flow<Pair<String, String>?> = retrievedUser.asSharedFlow()
+            override val loading: StateFlow<GoogleSignInState> = MutableStateFlow(GoogleSignInState.READY)
 
             override suspend fun signInUsingGoogle() {
                 Log.d("Login Helper", "signInUsingGoogle: Creating request...")
