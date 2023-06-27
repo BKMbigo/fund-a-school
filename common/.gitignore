@@ -41,3 +41,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/src/androidMain/kotlin/com/github/bkmbigo/fundaschool/presentation/components/dialog/login/FirebaseCredentials.kt
