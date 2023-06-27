@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
@@ -57,6 +58,7 @@ fun LoginDialog(
     val presenter = remember { LoginPresenter(authRepository) }
     val loginHelper = rememberLoginHelper(authRepository, onCompletedLogin)
 
+    val googleSignInState by loginHelper.loading.collectAsState()
     val state by presenter.state.collectAsState()
 
     var name by rememberSaveable(stateSaver = TextFieldValue.Saver) {
@@ -115,6 +117,13 @@ fun LoginDialog(
                     if (isActive) {
                         errorMessage = null
                     }
+                }
+            }
+        }
+        launch {
+            presenter.state.collect { presentState ->
+                if(presentState.state == LoginDialogState.SUCCESS) {
+                    loginHelper.savePassword(email.text, password.text)
                 }
             }
         }
@@ -323,14 +332,31 @@ fun LoginDialog(
                     defaultElevation = 8.dp
                 )
             ) {
-                Image(
-                    painter = BitmapPainter(
-                        resource("google_icon.png").rememberImageBitmap().orEmpty()
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .requiredSize(24.dp)
-                )
+                when(googleSignInState) {
+                    GoogleSignInState.READY -> {
+                        Image(
+                            painter = BitmapPainter(
+                                resource("google_icon.png").rememberImageBitmap().orEmpty()
+                            ),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .requiredSize(24.dp)
+                        )
+                    }
+                    GoogleSignInState.LOADING -> {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    GoogleSignInState.ERROR -> {
+                        Icon(
+                            imageVector = Icons.Default.ErrorOutline,
+                            contentDescription = null,
+                            tint = Color.Red,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
                     text = if (state.state == LoginDialogState.LOGIN) "Sign in using Google" else "Sign up using Google"
