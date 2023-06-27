@@ -42,6 +42,8 @@ internal actual fun rememberLoginHelper(
 
     val retrievedUser = remember { MutableSharedFlow<Pair<String, String>?>() }
 
+    val googleSignInState = remember { MutableStateFlow(GoogleSignInState.READY) }
+
     val oneTapClient = remember { Identity.getSignInClient(context) }
 
     val googleSignInRequest = remember {
@@ -94,6 +96,7 @@ internal actual fun rememberLoginHelper(
             when {
                 idToken != null -> {
                     coroutineScope.launch {
+                        googleSignInState.emit(GoogleSignInState.READY)
                         Log.i(
                             "LoginHelper",
                             "Google Authentication successful"
@@ -113,6 +116,7 @@ internal actual fun rememberLoginHelper(
                         "LoginHelper",
                         "Sign in launcher returned a result without idToken or password"
                     )
+                    googleSignInState.tryEmit(GoogleSignInState.ERROR)
                     Toast.makeText(context, "Unknown error occurred", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -121,7 +125,7 @@ internal actual fun rememberLoginHelper(
             when(e.statusCode){
                 CommonStatusCodes.CANCELED -> {
                     Toast.makeText(context, "Request Cancelled", Toast.LENGTH_SHORT).show()
-                    showOneTap = false
+                    googleSignInState.tryEmit(GoogleSignInState.ERROR)
                 }
                 CommonStatusCodes.NETWORK_ERROR -> {
                     Toast.makeText(
@@ -129,8 +133,10 @@ internal actual fun rememberLoginHelper(
                         "Google Encountered A Network Error",
                         Toast.LENGTH_SHORT
                     ).show()
+                    googleSignInState.tryEmit(GoogleSignInState.READY)
                 }
                 else -> {
+                    googleSignInState.tryEmit(GoogleSignInState.READY)
                     Toast.makeText(context, e.localizedMessage, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -164,14 +170,12 @@ internal actual fun rememberLoginHelper(
     return remember {
         object : LoginHelper {
             override val retrievedUsername: Flow<Pair<String, String>?> = retrievedUser.asSharedFlow()
-            override val loading: StateFlow<GoogleSignInState> = MutableStateFlow(GoogleSignInState.READY)
+            override val loading: StateFlow<GoogleSignInState> = googleSignInState
 
             override suspend fun signInUsingGoogle() {
-                Log.d("Login Helper", "signInUsingGoogle: Creating request...")
                 val result = oneTapClient.beginSignIn(googleSignInRequest).await()
                 try {
-                    Log.d("Login Helper", "signInUsingGoogle: Launching...")
-
+                    googleSignInState.tryEmit(GoogleSignInState.LOADING)
                     signInLauncher.launch(
                         IntentSenderRequest.Builder(result.pendingIntent)
                             .build()
