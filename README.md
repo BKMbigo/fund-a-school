@@ -1,5 +1,6 @@
 # Fund a school
 
+This project is currently incomplete and currently not actively being developed/maintained. Please refer to the projects mentioned below for complete or actively maintained projects.
 
 
 Had an idea to create a multiplatform(Android/Js) application to help in sourcing of funds for education in various parts of the world. 
